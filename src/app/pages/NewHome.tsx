@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+
 import { RecommendedProducts } from "../components/RecommendedProducts";
 import { useRecommendations } from "../hooks/useRecommendations";
 import bannerImage from "../../imports/Firefly_improve_your_business_2.jpg";
@@ -26,7 +27,6 @@ import {
 export function NewHome() {
   const [showWelcome, setShowWelcome] = useState(true);
   const recommended = useRecommendations();
-  const [activeCategory, setActiveCategory] = useState("Todos");
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const { userType, login } = useAuth();
   const navigate = useNavigate();
@@ -234,25 +234,17 @@ export function NewHome() {
             {categories.map((cat) => {
               const Icon = cat.icon;
               return (
-                <button
+                <Link
                   key={cat.name}
-                  onClick={() => setActiveCategory(cat.name)}
-                  className={`group p-6 border-2 rounded-3xl text-center transition-all hover:scale-105 hover:shadow-xl ${
-                    activeCategory === cat.name
-                      ? "border-coral bg-coral text-white shadow-lg"
-                      : "border-border bg-white hover:border-coral"
-                  }`}
+                  to={`/marketplace?categoria=${encodeURIComponent(cat.name)}`}
+                  className="group p-6 border-2 border-border bg-white rounded-3xl text-center transition-all hover:scale-105 hover:shadow-xl hover:border-coral"
                 >
-                  <div className={`mb-4 flex items-center justify-center ${
-                    activeCategory === cat.name ? "text-white" : "text-coral"
-                  }`}>
+                  <div className="mb-4 flex items-center justify-center text-coral">
                     <Icon className="w-12 h-12" />
                   </div>
                   <div className="text-sm mb-1 font-bold">{cat.name}</div>
-                  <div className={`text-xs ${
-                    activeCategory === cat.name ? "text-white/80" : "text-muted-foreground"
-                  }`}>{cat.count}</div>
-                </button>
+                  <div className="text-xs text-muted-foreground">{cat.count}</div>
+                </Link>
               );
             })}
           </div>

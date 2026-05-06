@@ -1,6 +1,6 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { Search, ChevronLeft, ChevronRight, ShoppingCart, Plus, Minus } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   TechnologyIcon,
   EquipmentIcon,
@@ -18,10 +18,19 @@ import { trackProduct } from "../hooks/useRecommendations";
 
 
 export function Marketplace() {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("Todos");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Lê categoria da URL ao carregar (ex: /marketplace?categoria=Saúde)
+  useEffect(() => {
+    const cat = searchParams.get("categoria");
+    if (cat) {
+      setSelectedCategory(cat);
+    }
+  }, [searchParams]);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const itemsPerPage = 8;
   const { addToCart } = useCart();
