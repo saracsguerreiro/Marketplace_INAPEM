@@ -445,7 +445,7 @@ export function NewHome() {
                 <ArrowRight className="w-5 h-5" />
               </button>
               <Link
-                to="/marketplace"
+                to="/empresas"
                 className="bg-white/10 border-2 border-white/30 backdrop-blur-sm px-8 py-4 rounded-xl hover:bg-white/20 transition-colors inline-flex items-center justify-center gap-2"
               >Saber Mais</Link>
             </div>
