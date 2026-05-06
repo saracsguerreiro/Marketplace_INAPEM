@@ -41,26 +41,26 @@ export function FornecedoresInfo() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/50"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-5xl mb-6 leading-tight">
-              Venda Mais com<br />Pagamento Garantido
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 w-full">
+          <div className="text-center">
+            <h1 className="text-2xl md:text-3xl mb-4 leading-tight">
+              Venda Mais com Pagamento Garantido
             </h1>
-            <p className="text-lg opacity-90 mb-8 leading-relaxed">
+            <p className="text-sm md:text-base opacity-90 mb-6 leading-relaxed max-w-xl mx-auto">
               Junte-se ao maior marketplace B2B de Angola. Ofereça financiamento aos seus
               clientes e receba o pagamento directamente do INAPEM, sem risco de incumprimento.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/fornecedores/registo"
-                className="bg-coral text-white px-8 py-4 rounded-xl inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-xl text-lg"
+                className="bg-coral text-white px-6 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-xl"
               >
                 Registar Empresa
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 to="/marketplace"
-                className="bg-white/10 border-2 border-white/30 backdrop-blur-sm text-white px-8 py-4 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/20 transition-colors text-lg"
+                className="bg-white/10 border-2 border-white/30 backdrop-blur-sm text-white px-6 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/20 transition-colors"
               >
                 Ver Marketplace
               </Link>
