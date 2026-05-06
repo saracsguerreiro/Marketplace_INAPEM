@@ -19,22 +19,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 10
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile --include=optional
-
-      - name: Install peer dependencies
-        run: pnpm add react@18.3.1 react-dom@18.3.1
+        run: npm install --legacy-peer-deps
 
       - name: Build
-        run: pnpm build
+        run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:
