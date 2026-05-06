@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace INAPEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#E94E1B;--orange-h:#C94010;--orange-light:#FEF0EB;--orange-mid:#F47A55;
+  --black:#1A1A1A;--gray:#7A7A7A;--gray-light:#A8A8B5;--gray-bg:#F7F7F8;
+  --border:#E8E8EC;--white:#FFFFFF;
+  --green:#1A9E5C;--green-light:#E8F7F0;
+  --red:#D93025;--red-light:#FDECEA;
+  --teal:#0D7D6E;--teal-light:#E6F4F2;
+  --blue:#2563EB;--blue-light:#EFF4FF;
+  --purple:#7C3AED;--purple-light:#F3EFFE;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--white);color:var(--black);overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{font-family:'Inter',sans-serif;cursor:pointer;}
+
+/* ── POPUP OVERLAY ── */
+.popup-overlay{position:fixed;inset:0;background:rgba(26,26,26,0.7);backdrop-filter:blur(6px);z-index:9000;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease;}
+.popup-box{background:var(--white);border-radius:24px;padding:48px 40px;max-width:520px;width:90%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.25);animation:slideUp .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.popup-logo{display:flex;justify-content:center;margin-bottom:28px;}
+.popup-logo img{height:48px;object-fit:contain;}
+.popup-title{font-size:22px;font-weight:900;color:var(--black);text-align:center;margin-bottom:6px;}
+.popup-sub{font-size:14px;color:var(--gray);text-align:center;margin-bottom:32px;line-height:1.6;}
+.popup-options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.popup-opt{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;background:var(--white);}
+.popup-opt:hover{border-color:var(--orange);background:var(--orange-light);}
+.popup-opt-icon{font-size:24px;width:44px;height:44px;background:var(--gray-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;}
+.popup-opt:hover .popup-opt-icon{background:var(--orange-light);}
+.popup-opt-text h4{font-size:13px;font-weight:700;color:var(--black);}
+.popup-opt-text p{font-size:11px;color:var(--gray);margin-top:2px;}
+.popup-divider{display:flex;align-items:center;gap:12px;color:var(--gray-light);font-size:11px;margin-bottom:20px;}
+.popup-divider::before,.popup-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.popup-login{display:flex;gap:10px;}
+.popup-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;}
+.popup-input:focus{border-color:var(--orange);}
+.popup-input::placeholder{color:var(--gray-light);}
+.popup-btn-login{padding:10px 18px;background:var(--black);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;white-space:nowrap;}
+.popup-skip{text-align:center;margin-top:16px;}
+.popup-skip a{font-size:12px;color:var(--gray);border-bottom:1px dashed var(--border);cursor:pointer;}
+.popup-skip a:hover{color:var(--orange);}
+
+/* ── MAIN LAYOUT ── */
+.main{display:none;}
+.main.visible{display:block;}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:1000;background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,0.06);}
+.topbar-inner{max-width:1280px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;gap:24px;}
+.tb-logo{display:flex;align-items:center;gap:0;cursor:pointer;flex-shrink:0;}
+.tb-logo img{height:38px;object-fit:contain;}
+.tb-search{flex:1;max-width:480px;position:relative;}
+.tb-search input{width:100%;padding:10px 16px 10px 40px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;background:var(--gray-bg);}
+.tb-search input:focus{border-color:var(--orange);background:var(--white);}
+.tb-search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--gray-light);font-size:14px;}
+.tb-cats{display:flex;gap:4px;overflow-x:auto;flex:1;}
+.tb-cats::-webkit-scrollbar{display:none;}
+.tb-cat{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;color:var(--gray);white-space:nowrap;cursor:pointer;transition:all .2s;}
+.tb-cat:hover,.tb-cat.active{background:var(--orange-light);color:var(--orange);}
+.tb-actions{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.tb-lang{font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;display:flex;align-items:center;gap:4px;}
+.tb-icon-btn{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all .2s;position:relative;}
+.tb-icon-btn:hover{border-color:var(--orange);background:var(--orange-light);}
+.tb-badge{position:absolute;top:-5px;right:-5px;width:16px;height:16px;background:var(--orange);color:#fff;border-radius:50%;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--white);}
+.tb-btn-login{padding:8px 20px;background:var(--orange);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;transition:all .2s;}
+.tb-btn-login:hover{background:var(--orange-h);}
+.tb-nav{border-top:1px solid var(--border);}
+.tb-nav-inner{max-width:1280px;margin:0 auto;padding:0 32px;height:40px;display:flex;align-items:center;gap:4px;}
+.tb-nav-item{padding:4px 14px;border-radius:6px;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tb-nav-item:hover,.tb-nav-item.active{color:var(--orange);background:var(--orange-light);}
+
+/* ── PAGE WRAPPER ── */
+.page-wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
+
+/* ── HERO BANNER ── */
+.hero-banner{border-radius:20px;overflow:hidden;margin:24px 0;background:linear-gradient(135deg,#1A1A1A 0%,#2d1810 50%,#3d1f0a 100%);position:relative;min-height:400px;display:flex;align-items:center;}
+.hero-bg-pattern{position:absolute;inset:0;opacity:.06;background-image:radial-gradient(circle at 20% 50%,var(--orange) 0%,transparent 50%),radial-gradient(circle at 80% 20%,var(--orange-mid) 0%,transparent 40%);}
+.hero-content{position:relative;z-index:1;padding:48px 56px;flex:1;}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(233,78,27,.2);border:1px solid rgba(233,78,27,.3);color:var(--orange-mid);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:20px;}
+.hero-title{font-size:clamp(28px,4vw,48px);font-weight:900;color:#fff;line-height:1.1;margin-bottom:14px;letter-spacing:-.02em;}
+.hero-title span{color:var(--orange);}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.7);max-width:500px;line-height:1.7;margin-bottom:28px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-btn-primary{padding:14px 28px;background:var(--orange);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;}
+.hero-btn-primary:hover{background:var(--orange-h);transform:translateY(-2px);box-shadow:0 8px 24px rgba(233,78,27,.35);}
+.hero-btn-secondary{padding:14px 28px;background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.2);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px);}
+.hero-btn-secondary:hover{background:rgba(255,255,255,.18);}
+.hero-stats{display:flex;gap:32px;margin-top:32px;}
+.hero-stat-val{font-size:24px;font-weight:900;color:var(--orange);}
+.hero-stat-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+.hero-image{position:absolute;right:0;top:0;bottom:0;width:42%;display:flex;align-items:center;justify-content:center;font-size:140px;opacity:.15;}
+
+/* ── SECTION HEADER ── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.sec-title{font-size:20px;font-weight:900;color:var(--black);}
+.sec-title span{color:var(--orange);}
+.sec-link{font-size:13px;font-weight:700;color:var(--orange);cursor:pointer;display:flex;align-items:center;gap:4px;}
+.section{margin-bottom:48px;}
+
+/* ── CATEGORIES ── */
+.cats-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;}
+.cat-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .2s;}
+.cat-card:hover{border-color:var(--orange);background:var(--orange-light);transform:translateY(-3px);box-shadow:0 8px 20px rgba(233,78,27,.1);}
+.cat-icon{font-size:28px;margin-bottom:8px;}
+.cat-name{font-size:11px;font-weight:700;color:var(--black);}
+.cat-count{font-size:10px;color:var(--gray-light);margin-top:2px;}
+
+/* ── PROMO BANNERS ── */
+.promo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.promo-card{border-radius:16px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;min-height:140px;}
+.promo-left h3{font-size:18px;font-weight:900;margin-bottom:6px;}
+.promo-left p{font-size:12px;line-height:1.6;margin-bottom:16px;opacity:.8;}
+.promo-cta{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;border:none;transition:all .2s;}
+.promo-icon{font-size:56px;opacity:.25;position:absolute;right:24px;top:50%;transform:translateY(-50%);}
+.promo-orange{background:linear-gradient(135deg,#E94E1B,#F47A55);color:#fff;}
+.promo-orange .promo-cta{background:rgba(255,255,255,.2);color:#fff;}
+.promo-orange .promo-cta:hover{background:rgba(255,255,255,.35);}
+.promo-dark{background:linear-gradient(135deg,#1A1A1A,#2d2d2d);color:#fff;}
+.promo-dark .promo-cta{background:var(--orange);color:#fff;}
+.promo-dark .promo-cta:hover{background:var(--orange-h);}
+
+/* ── PRODUCTS GRID ── */
+.products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.prod-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s;cursor:pointer;}
+.prod-card:hover{border-color:var(--orange);box-shadow:0 8px 28px rgba(233,78,27,.12);transform:translateY(-3px);}
+.prod-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:56px;background:var(--gray-bg);position:relative;}
+.prod-badge{position:absolute;top:10px;left:10px;padding:3px 8px;border-radius:6px;font-size:9px;font-weight:800;}
+.badge-cert{background:var(--green-light);color:var(--green);}
+.badge-new{background:var(--orange-light);color:var(--orange);}
+.badge-dest{background:#FFF8E6;color:#9A6000;}
+.prod-body{padding:14px 16px;}
+.prod-cat{font-size:9px;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.prod-name{font-size:13px;font-weight:700;color:var(--black);margin-bottom:3px;line-height:1.35;}
+.prod-vendor{font-size:11px;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:4px;}
+.vendor-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.prod-footer{display:flex;align-items:center;justify-content:space-between;}
+.prod-price{font-size:15px;font-weight:900;color:var(--black);}
+.prod-price span{font-size:10px;font-weight:500;color:var(--gray);}
+.prod-cart-btn{width:34px;height:34px;background:var(--orange-light);border:none;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .2s;}
+.prod-cart-btn:hover{background:var(--orange);color:#fff;}
+.prod-stars{font-size:10px;color:#F59E0B;margin-bottom:6px;}
+
+/* ── HIGHLIGHTS SLIDER ── */
+.highlights-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.highlight-card{border-radius:14px;overflow:hidden;position:relative;min-height:200px;cursor:pointer;}
+.highlight-img{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:64px;}
+.highlight-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,26,.85) 0%,transparent 60%);display:flex;flex-direction:column;justify-content:flex-end;padding:18px;}
+.highlight-cat{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--orange-mid);margin-bottom:4px;}
+.highlight-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;}
+.highlight-price{font-size:13px;font-weight:700;color:rgba(255,255,255,.8);}
+
+/* ── NEWS GRID ── */
+.news-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.news-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;}
+.news-card:hover{border-color:var(--orange);box-shadow:0 6px 20px rgba(0,0,0,.07);}
+.news-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:48px;background:var(--gray-bg);}
+.news-body{padding:16px;}
+.news-tag{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:6px;}
+.news-title{font-size:13px;font-weight:700;color:var(--black);line-height:1.4;margin-bottom:6px;}
+.news-date{font-size:10px;color:var(--gray-light);}
+
+/* ── REGISTER CTA BANNER ── */
+.cta-banner{background:linear-gradient(135deg,var(--orange) 0%,#F47A55 100%);border-radius:20px;padding:48px 56px;display:flex;align-items:center;justify-content:space-between;gap:32px;margin-bottom:48px;}
+.cta-left h2{font-size:26px;font-weight:900;color:#fff;margin-bottom:8px;line-height:1.2;}
+.cta-left p{font-size:14px;color:rgba(255,255,255,.8);max-width:480px;line-height:1.65;}
+.cta-btns{display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+.cta-btn-white{padding:14px 28px;background:#fff;color:var(--orange);border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.cta-btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2);}
+.cta-btn-outline{padding:13px 28px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.cta-btn-outline:hover{background:rgba(255,255,255,.15);}
+
+/* ── PARTNERS ── */
+.partners-row{display:flex;gap:24px;align-items:center;flex-wrap:wrap;justify-content:center;padding:24px 0;}
+.partner-badge{padding:10px 22px;border:1.5px solid var(--border);border-radius:10px;font-size:12px;font-weight:700;color:var(--gray);background:var(--white);}
+
+/* ── FOOTER ── */
+.footer{background:var(--black);color:#fff;padding:56px 0 0;}
+.footer-inner{max-width:1280px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px;}
+.footer-brand img{height:36px;filter:brightness(0) invert(1);margin-bottom:16px;}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;max-width:260px;}
+.footer-col h4{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:16px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.footer-col ul li{font-size:13px;color:rgba(255,255,255,.6);cursor:pointer;transition:color .2s;}
+.footer-col ul li:hover{color:var(--orange);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding:20px 32px;max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+.footer-bottom p{font-size:11px;color:rgba(255,255,255,.3);}
+.footer-langs{display:flex;gap:10px;}
+.footer-lang{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);cursor:pointer;padding:4px 8px;border-radius:5px;}
+.footer-lang:hover,.footer-lang.active{color:var(--orange);background:rgba(233,78,27,.1);}
+
+/* ── NAV PAGES (mapa + pme) ── */
+.subpage{display:none;padding-top:0;}
+.subpage.active{display:block;animation:fadeIn .3s ease;}
+.sp-header{background:var(--gray-bg);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;gap:12px;}
+.sp-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--gray);cursor:pointer;transition:color .2s;}
+.sp-back:hover{color:var(--orange);}
+.sp-title{font-size:14px;font-weight:800;color:var(--black);}
+
+/* ── PME SUBNAV ── */
+.pme-subnav{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;height:50px;display:flex;align-items:center;gap:4px;overflow-x:auto;position:sticky;top:68px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.pme-subnav::-webkit-scrollbar{display:none;}
+.pme-pill{padding:5px 14px;border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;border:1.5px solid transparent;white-space:nowrap;color:var(--gray-light);}
+.pme-pill.active{background:var(--orange);color:#fff;}
+.pme-pill.done{background:var(--green-light);color:var(--green);border-color:#9DE5C0;}
+.pme-pill:hover:not(.active){border-color:var(--orange);color:var(--orange);background:var(--orange-light);}
+.pme-sep{width:18px;height:1px;background:var(--border);flex-shrink:0;}
+.pme-screen{display:none;padding:36px 32px;max-width:1280px;margin:0 auto;}
+.pme-screen.active{display:block;animation:fadeIn .3s ease;}
+
+/* ── SHARED FORM STYLES ── */
+.section-tag{display:inline-flex;align-items:center;gap:6px;background:var(--orange-light);color:var(--orange);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:12px;}
+.page-title{font-size:clamp(22px,3vw,36px);font-weight:900;color:var(--black);line-height:1.15;margin-bottom:6px;}
+.page-title span{color:var(--orange);}
+.page-sub{font-size:14px;color:var(--gray);line-height:1.65;max-width:520px;}
+.card{background:var(--white);border-radius:16px;padding:24px 28px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.04);}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:12px;font-weight:600;color:var(--black);}
+.form-req{color:var(--orange);}
+.form-input,.form-select,.form-textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;color:var(--black);background:var(--white);outline:none;transition:border-color .2s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--orange);}
+.form-input::placeholder{color:var(--gray-light);}
+.form-textarea{resize:vertical;min-height:80px;}
+.form-grid{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 28px;background:var(--orange);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;width:100%;}
+.btn-primary:hover{background:var(--orange-h);transform:translateY(-1px);box-shadow:0 6px 20px rgba(233,78,27,.28);}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;background:transparent;color:var(--black);border:1.5px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--orange);color:var(--orange);}
+.btn-row{display:flex;gap:12px;margin-top:22px;}
+.one-col{max-width:580px;margin:0 auto;}
+.wide-col{max-width:940px;margin:0 auto;}
+.prog-bar{display:flex;align-items:center;gap:0;margin-bottom:24px;}
+.prog-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.prog-step::before{content:'';position:absolute;top:13px;left:50%;right:-50%;height:2px;background:var(--border);z-index:0;}
+.prog-step:last-child::before{display:none;}
+.prog-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--gray-light);position:relative;z-index:1;transition:all .3s;}
+.prog-step.done .prog-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.prog-step.active .prog-dot{background:var(--orange);border-color:var(--orange);color:#fff;}
+.prog-step.done::before{background:var(--green);}
+.prog-lbl{font-size:9px;color:var(--gray-light);margin-top:5px;text-align:center;font-weight:600;}
+.prog-step.active .prog-lbl{color:var(--orange);font-weight:800;}
+.prog-step.done .prog-lbl{color:var(--green);}
+.credit-highlight{background:var(--orange-light);border:1.5px solid #F5C4B4;border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;}
+.ch-icon{font-size:28px;}
+.ch-text h4{font-size:14px;font-weight:800;color:var(--orange);}
+.ch-text p{font-size:11px;color:var(--gray);margin-top:2px;}
+.status-wrap{max-width:460px;margin:0 auto;}
+.status-card{text-align:center;padding:40px 28px;border-radius:20px;}
+.s-icon{font-size:60px;margin-bottom:16px;}
+.s-title{font-size:22px;font-weight:900;margin-bottom:8px;}
+.s-sub{font-size:13px;color:var(--gray);line-height:1.65;margin-bottom:24px;}
+.sc-approved{background:var(--green-light);border:2px solid #9DE5C0;}
+.sc-approved .s-title{color:var(--green);}
+.credit-rows{background:var(--white);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:18px;text-align:left;}
+.cr-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;}
+.cr-row:last-child{border-bottom:none;}
+.cr-row span:first-child{color:var(--gray);}
+.cr-row span:last-child{font-weight:800;color:var(--black);}
+.search-bar{display:flex;gap:10px;margin-bottom:18px;}
+.search-input{flex:1;padding:11px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.search-input:focus{border-color:var(--orange);}
+.search-btn{padding:11px 22px;background:var(--orange);color:#fff;border:none;border-radius:10px;font-weight:800;cursor:pointer;font-size:13px;}
+.cats-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.cat-chip{padding:6px 14px;border-radius:100px;font-size:11px;font-weight:700;border:1.5px solid var(--border);background:var(--white);cursor:pointer;transition:all .2s;}
+.cat-chip:hover,.cat-chip.active{background:var(--orange);color:#fff;border-color:var(--orange);}
+.mp-prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.cert-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;color:var(--green);background:var(--green-light);padding:2px 7px;border-radius:100px;margin-bottom:6px;}
+.mp-prod-btn{padding:5px 12px;background:var(--orange-light);color:var(--orange);border-radius:7px;font-size:10px;font-weight:800;border:none;cursor:pointer;transition:all .2s;}
+.mp-prod-btn:hover{background:var(--orange);color:#fff;}
+.order-box{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:18px;}
+.order-head{padding:13px 18px;background:var(--gray-bg);border-bottom:1px solid var(--border);font-size:12px;font-weight:800;}
+.order-item{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.order-item:last-of-type{border-bottom:none;}
+.oi-emoji{font-size:28px;width:48px;height:48px;background:var(--gray-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.oi-info{flex:1;}
+.oi-name{font-size:12px;font-weight:800;color:var(--black);}
+.oi-vendor{font-size:10px;color:var(--gray);margin-top:2px;}
+.oi-price{font-size:14px;font-weight:900;}
+.order-total{padding:13px 18px;display:flex;justify-content:space-between;align-items:center;background:var(--gray-bg);}
+.pay-flow{display:flex;align-items:center;background:var(--white);border-radius:14px;padding:18px 20px;border:1px solid var(--border);margin-bottom:14px;}
+.pf-step{flex:1;text-align:center;position:relative;}
+.pf-step::after{content:'→';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--gray-light);}
+.pf-step:last-child::after{display:none;}
+.pf-icon{font-size:26px;margin-bottom:5px;}
+.pf-label{font-size:11px;font-weight:700;color:var(--black);}
+.pf-sub{font-size:9px;color:var(--gray);margin-top:1px;}
+.pay-warning{background:var(--orange-light);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--orange);font-weight:700;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi-card{background:var(--white);border-radius:14px;padding:18px;border:1px solid var(--border);}
+.kpi-label{font-size:10px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;}
+.kpi-value{font-size:24px;font-weight:900;color:var(--black);line-height:1;margin-bottom:3px;}
+.kpi-value.orange{color:var(--orange);}
+.kpi-value.green{color:var(--green);}
+.kpi-sub{font-size:10px;color:var(--gray-light);}
+.prest-list{display:flex;flex-direction:column;gap:8px;}
+.prest-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--white);border-radius:12px;border:1px solid var(--border);}
+.prest-month{font-size:12px;font-weight:800;color:var(--black);}
+.prest-date{font-size:10px;color:var(--gray);margin-top:1px;}
+.prest-val{font-size:13px;font-weight:900;}
+.chip{padding:3px 10px;border-radius:100px;font-size:9px;font-weight:800;}
+.chip-paid{background:var(--green-light);color:var(--green);}
+.chip-pend{background:#FFF8E6;color:#9A6000;}
+.chip-fut{background:var(--gray-bg);color:var(--gray-light);}
+.act-list{display:flex;flex-direction:column;gap:7px;}
+.act-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--white);border-radius:11px;border:1px solid var(--border);}
+.act-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.dot-g{background:var(--green);}
+.dot-o{background:var(--orange);}
+.dot-gr{background:var(--gray-light);}
+.act-text{flex:1;font-size:11px;color:var(--black);}
+.act-time{font-size:10px;color:var(--gray-light);}
+
+/* MAP STYLES */
+.map-section{padding:32px;}
+.map-header{text-align:center;margin-bottom:40px;}
+.map-entry-wrap{display:flex;justify-content:center;}
+.map-entry{background:var(--orange);border-radius:14px;padding:16px 36px;text-align:center;box-shadow:0 8px 32px rgba(233,78,27,.25);cursor:pointer;}
+.map-entry .icon{font-size:22px;margin-bottom:4px;}
+.map-entry h3{font-size:14px;font-weight:800;color:#fff;}
+.map-entry p{font-size:10px;color:rgba(255,255,255,.72);margin-top:2px;}
+.map-line-down{width:2px;height:32px;background:linear-gradient(to bottom,var(--orange),var(--border));margin:0 auto;}
+.map-cols-wrap{position:relative;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.map-cols-wrap::before{content:'';position:absolute;top:0;left:12.5%;right:12.5%;height:2px;background:var(--border);}
+.map-col{display:flex;flex-direction:column;align-items:center;}
+.map-col-tick{width:2px;height:32px;background:var(--border);}
+.map-actor{border-radius:13px;padding:14px 18px;text-align:center;width:100%;border:2px solid;transition:transform .2s;}
+.map-actor .icon{font-size:20px;margin-bottom:5px;}
+.map-actor h3{font-size:12px;font-weight:800;color:var(--black);}
+.map-actor p{font-size:10px;color:var(--gray);margin-top:2px;}
+.ma-pme{border-color:var(--orange);background:var(--orange-light);}
+.ma-forn{border-color:var(--teal);background:var(--teal-light);}
+.ma-visit{border-color:var(--blue);background:var(--blue-light);}
+.ma-inapem{border-color:var(--purple);background:var(--purple-light);}
+.map-step-line{width:2px;height:16px;}
+.pme-ln{background:var(--orange);}
+.forn-ln{background:var(--teal);}
+.visit-ln{background:var(--blue);}
+.inapem-ln{background:var(--purple);}
+.map-steps{display:flex;flex-direction:column;gap:5px;width:100%;}
+.map-step{border-radius:10px;padding:9px 12px;border:1px solid;display:flex;align-items:flex-start;gap:8px;cursor:default;}
+.ms-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
+.ms-body{flex:1;}
+.ms-title{font-size:11px;font-weight:700;color:var(--black);display:block;line-height:1.3;}
+.ms-sub{font-size:9px;color:var(--gray);display:block;margin-top:1px;line-height:1.4;}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;font-size:8px;font-weight:800;flex-shrink:0;margin-top:2px;}
+.sn-pme{background:var(--orange);color:#fff;}
+.sn-forn{background:var(--teal);color:#fff;}
+.sn-visit{background:var(--blue);color:#fff;}
+.sn-inapem{background:var(--purple);color:#fff;}
+.ms-pme{background:var(--white);border-color:#F5C4B4;}
+.ms-forn{background:var(--white);border-color:#A8DDD6;}
+.ms-visit{background:var(--white);border-color:#BFCFEF;}
+.ms-inapem{background:var(--white);border-color:#C4AEED;}
+.ms-ok{background:var(--green-light);border-color:#9DE5C0;}
+.ms-ok .ms-title{color:var(--green);}
+.ms-nok{background:var(--red-light);border-color:#F5AAAA;}
+.ms-nok .ms-title{color:var(--red);}
+.ms-fork{background:#FFF8E6;border-color:#F5D88A;}
+.ms-fork .ms-title{color:#9A6000;}
+.map-legend{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:40px;padding-top:28px;border-top:1px solid var(--border);}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--gray);font-weight:500;}
+.legend-dot{width:9px;height:9px;border-radius:50%;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     POP-UP BOAS-VINDAS
+════════════════════════════════════════ -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <div class="popup-logo">
+      <img src="data:image/png;base64,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" alt="INAPEM">
+    </div>
+    <div class="popup-title">Bem-vindo ao Marketplace INAPEM</div>
+    <div class="popup-sub">Diga-nos o que gostaria de fazer para personalizarmos a sua experiência.</div>
+    <div class="popup-options">
+      <div class="popup-opt" onclick="closePopup('pme')">
+        <div class="popup-opt-icon">🏢</div>
+        <div class="popup-opt-text">
+          <h4>Sou uma empresa e quero pedir financiamento</h4>
+          <p>Candidatar-me a crédito produtivo para comprar produtos e serviços</p>
+        </div>
+        <span style="color:var(--orange);font-size:18px;margin-left:auto;">›</span>
+      </div>
+      <div class="popup-opt" onclick="closePopup('fornecedor')">
+        <div class="popup-opt-icon">🏪</div>
+        <div class="popup-opt-text">
+          <h4>Sou fornecedor e quero inserir os meus produtos e serviços</h4>
+          <p>Registar a minha empresa e publicar o meu catálogo</p>
+        </div>
+        <span style="color:var(--orange);font-size:18px;margin-left:auto;">›</span>
+      </div>
+      <div class="popup-opt" onclick="closePopup('visitante')">
+        <div class="popup-opt-icon">👁️</div>
+        <div class="popup-opt-text">
+          <h4>Quero visitar o website</h4>
+          <p>Explorar o catálogo e conhecer o programa sem criar conta</p>
+        </div>
+        <span style="color:var(--orange);font-size:18px;margin-left:auto;">›</span>
+      </div>
+    </div>
+    <div class="popup-divider">ou entre se já tem conta</div>
+    <div class="popup-login">
+      <input class="popup-input" type="email" placeholder="Email ou NIF">
+      <input class="popup-input" type="password" placeholder="Palavra-passe">
+      <button class="popup-btn-login" onclick="closePopup('login')">Entrar</button>
+    </div>
+    <div class="popup-skip"><a onclick="closePopup('visitante')">✦ Ver Novidades — entrar directamente na plataforma</a></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     MAIN SITE
+════════════════════════════════════════ -->
+<div class="main" id="main">
+
+  <!-- ── TOPBAR ── -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="tb-logo" onclick="showSection('home')">
+        <img src="data:image/png;base64,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" alt="Marketplace INAPEM">
+      </div>
+      <div class="tb-search">
+        <span class="tb-search-icon">🔍</span>
+        <input type="text" placeholder="Pesquisar produtos, serviços, fornecedores...">
+      </div>
+      <div class="tb-cats">
+        <div class="tb-cat active" onclick="showSection('home')">Início</div>
+        <div class="tb-cat" onclick="showSection('mapa')">Mapa</div>
+        <div class="tb-cat" onclick="showSection('pme')">Pedir Financiamento</div>
+        <div class="tb-cat">Fornecedores</div>
+        <div class="tb-cat">Sobre o INAPEM</div>
+      </div>
+      <div class="tb-actions">
+        <div class="tb-lang">🌐 PT <span style="font-size:9px;color:var(--gray-light);">▾</span></div>
+        <div class="tb-icon-btn" title="Carrinho">🛒<div class="tb-badge">3</div></div>
+        <div class="tb-icon-btn" title="Notificações">🔔<div class="tb-badge">2</div></div>
+        <button class="tb-btn-login" onclick="showSection('pme')">Entrar / Registar</button>
+      </div>
+    </div>
+    <nav class="tb-nav">
+      <div class="tb-nav-inner">
+        <div class="tb-nav-item active">🏠 Início</div>
+        <div class="tb-nav-item">💻 Tecnologia</div>
+        <div class="tb-nav-item">⚙️ Equipamentos</div>
+        <div class="tb-nav-item">🔧 Serviços</div>
+        <div class="tb-nav-item">🏗️ Construção</div>
+        <div class="tb-nav-item">🚛 Logística</div>
+        <div class="tb-nav-item">🌾 Agronegócio</div>
+        <div class="tb-nav-item">🏥 Saúde</div>
+        <div class="tb-nav-item">📦 Outros</div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ════════════════════
+       HOME
+  ════════════════════ -->
+  <div id="sec-home" class="subpage active">
+    <div class="page-wrap">
+
+      <!-- HERO BANNER -->
+      <div class="hero-banner">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+          <div class="hero-tag">🇦🇴 Plataforma Nacional · Angola</div>
+          <div class="hero-title">Impulsione o seu negócio<br>com <span>crédito produtivo</span></div>
+          <div class="hero-sub">Encontre produtos e serviços de fornecedores certificados. Peça financiamento e pague directamente ao fornecedor — sem intermediários.</div>
+          <div class="hero-btns">
+            <button class="hero-btn-primary" onclick="showSection('pme')">Pedir Financiamento →</button>
+            <button class="hero-btn-secondary" onclick="showSection('mapa')">Como Funciona</button>
+          </div>
+          <div class="hero-stats">
+            <div><div class="hero-stat-val">500+</div><div class="hero-stat-lbl">Empresas Apoiadas</div></div>
+            <div><div class="hero-stat-val">1.000</div><div class="hero-stat-lbl">Fornecedores</div></div>
+            <div><div class="hero-stat-val">1M Kz</div><div class="hero-stat-lbl">Crédito Máximo</div></div>
+          </div>
+        </div>
+        <div class="hero-image">🏪</div>
+      </div>
+
+      <!-- CATEGORIAS -->
+      <div class="section">
+        <div class="sec-header">
+          <div class="sec-title">Explorar por <span>Categoria</span></div>
+          <div class="sec-link">Ver todas →</div>
+        </div>
+        <div class="cats-grid">
+          <div class="cat-card"><div class="cat-icon">💻</div><div class="cat-name">Tecnologia</div><div class="cat-count">128 produtos</div></div>
+          <div class="cat-card"><div class="cat-icon">⚙️</div><div class="cat-name">Equipamentos</div><div class="cat-count">94 produtos</div></div>
+          <div class="cat-card"><div class="cat-icon">🔧</div><div class="cat-name">Serviços</div><div class="cat-count">67 serviços</div></div>
+          <div class="cat-card"><div class="cat-icon">🏗️</div><div class="cat-name">Construção</div><div class="cat-count">52 produtos</div></div>
+          <div class="cat-card"><div class="cat-icon">🚛</div><div class="cat-name">Logística</div><div class="cat-count">38 serviços</div></div>
+          <div class="cat-card"><div class="cat-icon">🌾</div><div class="cat-name">Agronegócio</div><div class="cat-count">71 produtos</div></div>
+          <div class="cat-card"><div class="cat-icon">🏥</div><div class="cat-name">Saúde</div><div class="cat-count">45 produtos</div></div>
+        </div>
+      </div>
+
+      <!-- DESTAQUES -->
+      <div class="section">
+        <div class="sec-header">
+          <div class="sec-title">Produtos em <span>Destaque</span></div>
+          <div class="sec-link">Ver todos →</div>
+        </div>
+        <div class="highlights-row">
+          <div class="highlight-card" onclick="showSection('pme')">
+            <div class="highlight-img" style="background:linear-gradient(135deg,#1a2d4a,#2d4a7a)">💻</div>
+            <div class="highlight-overlay">
+              <div class="highlight-cat">Tecnologia</div>
+              <div class="highlight-name">Computador Desktop Profissional</div>
+              <div class="highlight-price">280.000 Kz</div>
+            </div>
+          </div>
+          <div class="highlight-card" onclick="showSection('pme')">
+            <div class="highlight-img" style="background:linear-gradient(135deg,#1a3a2a,#2a5a3a)">⚙️</div>
+            <div class="highlight-overlay">
+              <div class="highlight-cat">Equipamentos</div>
+              <div class="highlight-name">Máquina de Costura Industrial</div>
+              <div class="highlight-price">450.000 Kz</div>
+            </div>
+          </div>
+          <div class="highlight-card" onclick="showSection('pme')">
+            <div class="highlight-img" style="background:linear-gradient(135deg,#3a1a1a,#5a2a1a)">🌾</div>
+            <div class="highlight-overlay">
+              <div class="highlight-cat">Agronegócio</div>
+              <div class="highlight-name">Kit de Irrigação Gotejamento</div>
+              <div class="highlight-price">350.000 Kz</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROMO BANNERS -->
+      <div class="section">
+        <div class="promo-grid">
+          <div class="promo-card promo-orange">
+            <div class="promo-left">
+              <h3>Registe a sua empresa</h3>
+              <p>Aceda a crédito produtivo de até 1.000.000 Kz para comprar o que o seu negócio precisa.</p>
+              <button class="promo-cta" onclick="showSection('pme')">Candidatar-me agora →</button>
+            </div>
+            <div class="promo-icon">🏢</div>
+          </div>
+          <div class="promo-card promo-dark">
+            <div class="promo-left">
+              <h3>É fornecedor?</h3>
+              <p>Publique os seus produtos e serviços e alcance centenas de empresas angolanas.</p>
+              <button class="promo-cta">Listar os meus produtos →</button>
+            </div>
+            <div class="promo-icon">🏪</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GALERIA DE PRODUTOS -->
+      <div class="section">
+        <div class="sec-header">
+          <div class="sec-title">Galeria de <span>Produtos</span></div>
+          <div class="sec-link">Ver catálogo completo →</div>
+        </div>
+        <div class="products-grid">
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#EFF4FF"><span class="prod-badge badge-cert">✓ Certificado</span>💻</div>
+            <div class="prod-body">
+              <div class="prod-cat">Tecnologia</div>
+              <div class="prod-name">Computador Desktop Profissional</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>TecnoLuanda, Lda.</div>
+              <div class="prod-stars">★★★★★ (24)</div>
+              <div class="prod-footer"><div class="prod-price">280.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#E6F4F2"><span class="prod-badge badge-new">Novo</span>⚙️</div>
+            <div class="prod-body">
+              <div class="prod-cat">Equipamentos</div>
+              <div class="prod-name">Máquina de Costura Industrial</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>IndustrialTech Luanda</div>
+              <div class="prod-stars">★★★★☆ (17)</div>
+              <div class="prod-footer"><div class="prod-price">450.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#FEF0EB"><span class="prod-badge badge-dest">Destaque</span>🌾</div>
+            <div class="prod-body">
+              <div class="prod-cat">Agronegócio</div>
+              <div class="prod-name">Kit de Irrigação Gotejamento</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>AgroAngola Solutions</div>
+              <div class="prod-stars">★★★★★ (31)</div>
+              <div class="prod-footer"><div class="prod-price">350.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#F3EFFE"><span class="prod-badge badge-cert">✓ Certificado</span>🔧</div>
+            <div class="prod-body">
+              <div class="prod-cat">Serviços</div>
+              <div class="prod-name">Consultoria em Gestão Empresarial</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>Consultores Associados</div>
+              <div class="prod-stars">★★★★★ (8)</div>
+              <div class="prod-footer"><div class="prod-price">200.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#E8F7F0"><span class="prod-badge badge-cert">✓ Certificado</span>🖨️</div>
+            <div class="prod-body">
+              <div class="prod-cat">Tecnologia</div>
+              <div class="prod-name">Impressora Multifunções A3/A4</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>DigitalOffice Angola</div>
+              <div class="prod-stars">★★★★☆ (12)</div>
+              <div class="prod-footer"><div class="prod-price">120.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#FFF8E6"><span class="prod-badge badge-dest">Destaque</span>🚛</div>
+            <div class="prod-body">
+              <div class="prod-cat">Logística</div>
+              <div class="prod-name">Serviço de Armazenagem Mensal</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>LogiStore Angola</div>
+              <div class="prod-stars">★★★★★ (6)</div>
+              <div class="prod-footer"><div class="prod-price">80.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#EFF4FF"><span class="prod-badge badge-cert">✓ Certificado</span>🏗️</div>
+            <div class="prod-body">
+              <div class="prod-cat">Construção</div>
+              <div class="prod-name">Materiais de Construção Premium</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>BuildAngola, Lda.</div>
+              <div class="prod-stars">★★★★☆ (19)</div>
+              <div class="prod-footer"><div class="prod-price">600.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+          <div class="prod-card" onclick="showSection('pme')">
+            <div class="prod-img" style="background:#E6F4F2"><span class="prod-badge badge-new">Novo</span>🏥</div>
+            <div class="prod-body">
+              <div class="prod-cat">Saúde</div>
+              <div class="prod-name">Equipamento Médico de Diagnóstico</div>
+              <div class="prod-vendor"><span class="vendor-dot"></span>MediTech Angola</div>
+              <div class="prod-stars">★★★★★ (4)</div>
+              <div class="prod-footer"><div class="prod-price">750.000 <span>Kz</span></div><button class="prod-cart-btn">🛒</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA BANNER -->
+      <div class="cta-banner">
+        <div class="cta-left">
+          <h2>Pronto para impulsionar o seu negócio com crédito produtivo?</h2>
+          <p>Registe a sua empresa, complete a candidatura e aceda a financiamento de até 1.000.000 Kz — pago directamente ao fornecedor que escolher.</p>
+        </div>
+        <div class="cta-btns">
+          <button class="cta-btn-white" onclick="showSection('pme')">🏢 Registar Empresa</button>
+          <button class="cta-btn-outline">🏪 Tornar-me Fornecedor</button>
+        </div>
+      </div>
+
+      <!-- ÚLTIMAS NOVIDADES -->
+      <div class="section">
+        <div class="sec-header">
+          <div class="sec-title">Últimas <span>Novidades</span></div>
+          <div class="sec-link">Ver todas →</div>
+        </div>
+        <div class="news-grid">
+          <div class="news-card">
+            <div class="news-img" style="background:#EFF4FF">📢</div>
+            <div class="news-body">
+              <div class="news-tag">Programa</div>
+              <div class="news-title">INAPEM lança fase piloto do Marketplace com 500 vagas para PMEs</div>
+              <div class="news-date">2 de Maio de 2025</div>
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-img" style="background:#E8F7F0">🏦</div>
+            <div class="news-body">
+              <div class="news-tag">Financiamento</div>
+              <div class="news-title">BDA e BCI associam-se ao programa de microcrédito produtivo do INAPEM</div>
+              <div class="news-date">28 de Abril de 2025</div>
+            </div>
+          </div>
+          <div class="news-card">
+            <div class="news-img" style="background:#FEF0EB">📋</div>
+            <div class="news-body">
+              <div class="news-tag">Fornecedores</div>
+              <div class="news-title">Abertas candidaturas para fornecedores certificados em todas as províncias</div>
+              <div class="news-date">20 de Abril de 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARCEIROS -->
+      <div class="section">
+        <div class="sec-header"><div class="sec-title">Parceiros <span>Financiadores</span></div></div>
+        <div class="partners-row">
+          <div class="partner-badge">🏦 BDA</div>
+          <div class="partner-badge">🏦 BCI</div>
+          <div class="partner-badge">🏦 BFA</div>
+          <div class="partner-badge">🏦 Banco Sol</div>
+          <div class="partner-badge">🏦 Fundo Activo</div>
+          <div class="partner-badge">🏛️ Ministério da Economia</div>
+        </div>
+      </div>
+
+    </div><!-- end page-wrap -->
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="data:image/png;base64,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" alt="INAPEM">
+          <p>O Marketplace INAPEM é a plataforma digital que conecta micro e pequenas empresas angolanas a fornecedores certificados e financiamento produtivo.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Plataforma</h4>
+          <ul>
+            <li>Como Funciona</li>
+            <li>Pedir Financiamento</li>
+            <li>Ser Fornecedor</li>
+            <li>Categorias</li>
+            <li>Novidades</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Suporte</h4>
+          <ul>
+            <li>Centro de Ajuda</li>
+            <li>Contacte-nos</li>
+            <li>FAQ</li>
+            <li>Termos de Uso</li>
+            <li>Privacidade</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>INAPEM</h4>
+          <ul>
+            <li>Sobre o INAPEM</li>
+            <li>Missão e Visão</li>
+            <li>Parceiros</li>
+            <li>Relatórios</li>
+            <li>Imprensa</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 INAPEM — Instituto Nacional de Apoio às Pequenas e Médias Empresas · Angola</p>
+        <div class="footer-langs">
+          <span class="footer-lang active">PT</span>
+          <span class="footer-lang">EN</span>
+        </div>
+      </div>
+    </footer>
+  </div><!-- end sec-home -->
+
+  <!-- ════════════════════
+       MAPA DA PLATAFORMA
+  ════════════════════ -->
+  <div id="sec-mapa" class="subpage">
+    <div class="sp-header">
+      <div class="sp-back" onclick="showSection('home')">← Início</div>
+      <span style="color:var(--border)">|</span>
+      <div class="sp-title">🗺️ Mapa Completo da Plataforma</div>
+    </div>
+    <div class="map-section">
+      <div class="map-header">
+        <div class="section-tag">Mapa da Plataforma · v2.0</div>
+        <div class="page-title" style="text-align:center;">Mapa Completo de <span>Navegação</span></div>
+        <p style="font-size:14px;color:var(--gray);max-width:500px;margin:10px auto 0;text-align:center;">Todos os actores, ecrãs e fluxos da plataforma.</p>
+      </div>
+      <div class="map-entry-wrap">
+        <div class="map-entry" onclick="showSection('home')">
+          <div class="icon">🏠</div>
+          <h3>Página de Entrada</h3>
+          <p>Pop-up de identificação · Login · Ver Novidades</p>
+        </div>
+      </div>
+      <div class="map-line-down"></div>
+      <div class="map-cols-wrap">
+        <div class="map-col">
+          <div class="map-col-tick"></div>
+          <div class="map-actor ma-pme" onclick="showSection('pme')" style="cursor:pointer;">
+            <div class="icon">🏢</div><h3>PME / Empresa</h3><p>Candidatura · Crédito · Compra</p>
+          </div>
+          <div class="map-step-line pme-ln"></div>
+          <div class="map-steps">
+            <div class="map-step ms-pme"><span class="step-num sn-pme">1</span><div class="ms-body"><span class="ms-title">Registo da Empresa</span><span class="ms-sub">NIF · Actividade · Província</span></div></div>
+            <div class="map-step ms-pme"><span class="step-num sn-pme">2</span><div class="ms-body"><span class="ms-title">Candidatura ao Crédito</span><span class="ms-sub">Formulário · Valor · Prazo</span></div></div>
+            <div class="map-step ms-ok"><span class="ms-icon">✅</span><div class="ms-body"><span class="ms-title">Candidato Aprovado</span><span class="ms-sub">INAPEM + Instituição Financeira</span></div></div>
+            <div class="map-step ms-nok"><span class="ms-icon">❌</span><div class="ms-body"><span class="ms-title">Candidatura Recusada</span><span class="ms-sub">Notificação com motivo</span></div></div>
+            <div class="map-step ms-pme"><span class="step-num sn-pme">3</span><div class="ms-body"><span class="ms-title">Escolha no Marketplace</span><span class="ms-sub">Fornecedores certificados</span></div></div>
+            <div class="map-step ms-pme"><span class="step-num sn-pme">4</span><div class="ms-body"><span class="ms-title">Aprovação da Compra</span><span class="ms-sub">INAPEM + Banco aprovam</span></div></div>
+            <div class="map-step ms-fork"><span class="ms-icon">🏦</span><div class="ms-body"><span class="ms-title">Pagamento Directo ao Fornecedor</span><span class="ms-sub">Nunca passa pela PME</span></div></div>
+            <div class="map-step ms-pme"><span class="step-num sn-pme">5</span><div class="ms-body"><span class="ms-title">Entrega e Utilização</span><span class="ms-sub">Bem entregue à empresa</span></div></div>
+            <div class="map-step ms-pme"><span class="step-num sn-pme">6</span><div class="ms-body"><span class="ms-title">Acompanhamento e Reembolso</span><span class="ms-sub">Plataforma monitoriza · Prestações</span></div></div>
+          </div>
+        </div>
+        <div class="map-col">
+          <div class="map-col-tick"></div>
+          <div class="map-actor ma-forn"><div class="icon">🏪</div><h3>Fornecedor</h3><p>Listar · Vender · Receber</p></div>
+          <div class="map-step-line forn-ln"></div>
+          <div class="map-steps">
+            <div class="map-step ms-forn"><span class="step-num sn-forn">1</span><div class="ms-body"><span class="ms-title">Registo do Fornecedor</span><span class="ms-sub">Empresa · NIF · Categoria</span></div></div>
+            <div class="map-step ms-ok"><span class="ms-icon">✅</span><div class="ms-body"><span class="ms-title">Validação pelo INAPEM</span><span class="ms-sub">Certificação obrigatória</span></div></div>
+            <div class="map-step ms-forn"><span class="step-num sn-forn">2</span><div class="ms-body"><span class="ms-title">Painel do Fornecedor</span><span class="ms-sub">Visão geral · Alertas</span></div></div>
+            <div class="map-step ms-forn"><span class="step-num sn-forn">3</span><div class="ms-body"><span class="ms-title">Adicionar Produto / Serviço</span><span class="ms-sub">Nome · Preço · Fotos · Categoria</span></div></div>
+            <div class="map-step ms-forn"><span class="step-num sn-forn">4</span><div class="ms-body"><span class="ms-title">Gerir Catálogo</span><span class="ms-sub">Editar · Pausar · Remover</span></div></div>
+            <div class="map-step ms-forn"><span class="step-num sn-forn">5</span><div class="ms-body"><span class="ms-title">Encomendas Recebidas</span><span class="ms-sub">Pendentes · Em curso · Concluídas</span></div></div>
+            <div class="map-step ms-forn"><span class="step-num sn-forn">6</span><div class="ms-body"><span class="ms-title">Pagamentos</span><span class="ms-sub">Recebimento garantido · Facturas</span></div></div>
+          </div>
+        </div>
+        <div class="map-col">
+          <div class="map-col-tick"></div>
+          <div class="map-actor ma-visit"><div class="icon">👁️</div><h3>Visitante</h3><p>Explorar sem conta</p></div>
+          <div class="map-step-line visit-ln"></div>
+          <div class="map-steps">
+            <div class="map-step ms-visit"><span class="step-num sn-visit">1</span><div class="ms-body"><span class="ms-title">Homepage Pública</span><span class="ms-sub">Destaques · Novidades · Categorias</span></div></div>
+            <div class="map-step ms-visit"><span class="step-num sn-visit">2</span><div class="ms-body"><span class="ms-title">Explorar Catálogo</span><span class="ms-sub">Filtrar por categoria · Pesquisar</span></div></div>
+            <div class="map-step ms-visit"><span class="step-num sn-visit">3</span><div class="ms-body"><span class="ms-title">Ver Produto (só leitura)</span><span class="ms-sub">Sem acesso a preço ou compra</span></div></div>
+            <div class="map-step ms-visit"><span class="step-num sn-visit">4</span><div class="ms-body"><span class="ms-title">Sobre o Programa</span><span class="ms-sub">O que é · Como funciona</span></div></div>
+            <div class="map-step ms-fork"><span class="ms-icon">💡</span><div class="ms-body"><span class="ms-title">CTA — Registar-se</span><span class="ms-sub">Comprar com crédito · Listar produtos</span></div></div>
+          </div>
+        </div>
+        <div class="map-col">
+          <div class="map-col-tick"></div>
+          <div class="map-actor ma-inapem"><div class="icon">🏛️</div><h3>INAPEM</h3><p>Gestão · Controlo · Impacto</p></div>
+          <div class="map-step-line inapem-ln"></div>
+          <div class="map-steps">
+            <div class="map-step ms-inapem"><span class="ms-icon">🔐</span><div class="ms-body"><span class="ms-title">Login Institucional</span><span class="ms-sub">Acesso restrito a gestores</span></div></div>
+            <div class="map-step ms-inapem"><span class="ms-icon">📊</span><div class="ms-body"><span class="ms-title">Dashboard Principal</span><span class="ms-sub">KPIs · Alertas · Resumo</span></div></div>
+            <div class="map-step ms-inapem"><span class="step-num sn-inapem">1</span><div class="ms-body"><span class="ms-title">Gestão de Empresas</span><span class="ms-sub">Validar · Aprovar · Suspender</span></div></div>
+            <div class="map-step ms-inapem"><span class="step-num sn-inapem">2</span><div class="ms-body"><span class="ms-title">Gestão de Fornecedores</span><span class="ms-sub">Certificar · Monitorizar</span></div></div>
+            <div class="map-step ms-inapem"><span class="step-num sn-inapem">3</span><div class="ms-body"><span class="ms-title">Análise de Pedidos de Crédito</span><span class="ms-sub">Avaliar · Aprovar · Recusar</span></div></div>
+            <div class="map-step ms-inapem"><span class="step-num sn-inapem">4</span><div class="ms-body"><span class="ms-title">Gestão de Financiadores</span><span class="ms-sub">Bancos · Fundos · Acordos</span></div></div>
+            <div class="map-step ms-inapem"><span class="step-num sn-inapem">5</span><div class="ms-body"><span class="ms-title">Relatórios & Impacto</span><span class="ms-sub">Empregos · Formalização</span></div></div>
+            <div class="map-step ms-inapem"><span class="ms-icon">🤖</span><div class="ms-body"><span class="ms-title">Análise de Risco com IA</span><span class="ms-sub">Perfil de crédito · Fraudes</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>PME</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Fornecedor</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Visitante</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>INAPEM</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Aprovado</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Recusado</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#F5D88A"></div>Ponto-chave</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════
+       FLUXO PME
+  ════════════════════ -->
+  <div id="sec-pme" class="subpage">
+    <div class="sp-header">
+      <div class="sp-back" onclick="showSection('home')">← Início</div>
+      <span style="color:var(--border)">|</span>
+      <div class="sp-title">🏢 Fluxo da PME — Registo ao Crédito Aprovado</div>
+    </div>
+    <div class="pme-subnav">
+      <div class="pme-pill active" onclick="goPME(1)">1. Registo</div>
+      <div class="pme-sep"></div>
+      <div class="pme-pill inactive" onclick="goPME(2)">2. Candidatura</div>
+      <div class="pme-sep"></div>
+      <div class="pme-pill inactive" onclick="goPME(3)">3. Aprovação</div>
+      <div class="pme-sep"></div>
+      <div class="pme-pill inactive" onclick="goPME(4)">4. Marketplace</div>
+      <div class="pme-sep"></div>
+      <div class="pme-pill inactive" onclick="goPME(5)">5. Compra</div>
+      <div class="pme-sep"></div>
+      <div class="pme-pill inactive" onclick="goPME(6)">6. Dashboard</div>
+    </div>
+
+    <!-- PS1 REGISTO -->
+    <div id="ps1" class="pme-screen active">
+      <div class="one-col">
+        <div style="margin-bottom:24px;">
+          <div class="section-tag">Passo 1 de 6</div>
+          <div class="page-title">Registo da <span>Empresa</span></div>
+          <div class="page-sub">Preencha os dados da sua empresa para criar conta no Marketplace INAPEM.</div>
+        </div>
+        <div class="prog-bar">
+          <div class="prog-step active"><div class="prog-dot">1</div><div class="prog-lbl">Dados Gerais</div></div>
+          <div class="prog-step inactive"><div class="prog-dot">2</div><div class="prog-lbl">Actividade</div></div>
+          <div class="prog-step inactive"><div class="prog-dot">3</div><div class="prog-lbl">Responsável</div></div>
+          <div class="prog-step inactive"><div class="prog-dot">4</div><div class="prog-lbl">Confirmação</div></div>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:800;margin-bottom:4px;">Dados Gerais da Empresa</div>
+          <div style="font-size:12px;color:var(--gray);margin-bottom:18px;">Informações de identificação legal</div>
+          <div class="form-grid g2">
+            <div class="form-group"><label class="form-label">Nome da Empresa <span class="form-req">*</span></label><input class="form-input" placeholder="Ex: TecnoLuanda, Lda."></div>
+            <div class="form-group"><label class="form-label">NIF <span class="form-req">*</span></label><input class="form-input" placeholder="Ex: 5000123456"></div>
+            <div class="form-group"><label class="form-label">Forma Jurídica <span class="form-req">*</span></label><select class="form-select"><option value="">Seleccione...</option><option>Empresa em Nome Individual</option><option>Sociedade por Quotas (Lda.)</option><option>Sociedade Anónima (S.A.)</option></select></div>
+            <div class="form-group"><label class="form-label">Data de Constituição <span class="form-req">*</span></label><input class="form-input" type="date"></div>
+            <div class="form-group"><label class="form-label">Província <span class="form-req">*</span></label><select class="form-select"><option value="">Seleccione...</option><option>Luanda</option><option>Benguela</option><option>Huambo</option><option>Huíla</option><option>Cabinda</option><option>Malanje</option><option>Kwanza Norte</option><option>Kwanza Sul</option><option>Namibe</option><option>Cunene</option><option>Bié</option><option>Bengo</option></select></div>
+            <div class="form-group"><label class="form-label">Município <span class="form-req">*</span></label><input class="form-input" placeholder="Ex: Talatona"></div>
+            <div class="form-group"><label class="form-label">Email <span class="form-req">*</span></label><input class="form-input" type="email" placeholder="email@empresa.ao"></div>
+            <div class="form-group"><label class="form-label">Telefone <span class="form-req">*</span></label><input class="form-input" placeholder="+244 9XX XXX XXX"></div>
+          </div>
+          <div class="btn-row"><button class="btn-primary" onclick="goPME(2)">Continuar — Candidatura ao Crédito →</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PS2 CANDIDATURA -->
+    <div id="ps2" class="pme-screen">
+      <div class="one-col">
+        <div style="margin-bottom:24px;">
+          <div class="section-tag">Passo 2 de 6</div>
+          <div class="page-title">Candidatura ao <span>Crédito</span></div>
+          <div class="page-sub">Indique o valor e finalidade do financiamento. O INAPEM fará a ligação com as instituições financeiras parceiras.</div>
+        </div>
+        <div class="credit-highlight">
+          <div class="ch-icon">🏦</div>
+          <div class="ch-text"><h4>Limite disponível: 300.000 — 1.000.000 Kz</h4><p>Valor máximo por beneficiário na fase piloto do programa</p></div>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:800;margin-bottom:4px;">Detalhes do Financiamento</div>
+          <div style="font-size:12px;color:var(--gray);margin-bottom:18px;">O crédito é pago directamente ao fornecedor — nunca em dinheiro</div>
+          <div class="form-grid g2">
+            <div class="form-group"><label class="form-label">Valor Solicitado (Kz) <span class="form-req">*</span></label><input class="form-input" type="number" placeholder="Ex: 500000"><div class="form-hint">Entre 300.000 Kz e 1.000.000 Kz</div></div>
+            <div class="form-group"><label class="form-label">Prazo de Reembolso <span class="form-req">*</span></label><select class="form-select"><option value="">Seleccione...</option><option>6 meses</option><option>12 meses</option><option>18 meses</option><option>24 meses</option></select></div>
+            <div class="form-group" style="grid-column:1/-1"><label class="form-label">Categoria do Crédito <span class="form-req">*</span></label><select class="form-select"><option value="">Seleccione...</option><option>💻 Tecnologia</option><option>⚙️ Equipamentos</option><option>🔧 Serviços</option><option>🏗️ Construção</option><option>🚛 Logística</option><option>🌾 Agronegócio</option></select></div>
+            <div class="form-group" style="grid-column:1/-1"><label class="form-label">Descrição da Utilização <span class="form-req">*</span></label><textarea class="form-textarea" placeholder="Descreva como o crédito será utilizado e que impacto terá no seu negócio..."></textarea></div>
+            <div class="form-group"><label class="form-label">Nº de Empregados</label><input class="form-input" type="number" placeholder="Ex: 5"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-secondary" onclick="goPME(1)">← Voltar</button>
+            <button class="btn-primary" onclick="goPME(3)">Submeter Candidatura →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PS3 APROVAÇÃO -->
+    <div id="ps3" class="pme-screen">
+      <div class="one-col">
+        <div style="margin-bottom:24px;"><div class="section-tag">Passo 3 de 6</div><div class="page-title">Candidatura <span>Aprovada</span></div></div>
+        <div class="status-wrap">
+          <div class="status-card sc-approved">
+            <div class="s-icon">🎉</div>
+            <div class="s-title">Parabéns! Aprovado!</div>
+            <div class="s-sub">A sua candidatura foi analisada e aprovada pelo INAPEM e pela instituição financeira parceira. Já pode escolher os seus produtos no Marketplace.</div>
+            <div class="credit-rows">
+              <div class="cr-row"><span>Valor Aprovado</span><span style="color:var(--green)">500.000 Kz</span></div>
+              <div class="cr-row"><span>Prazo</span><span>12 meses</span></div>
+              <div class="cr-row"><span>Prestação Mensal</span><span>45.833 Kz / mês</span></div>
+              <div class="cr-row"><span>Financiador</span><span>BDA — Banco de Desenvolvimento</span></div>
+              <div class="cr-row"><span>Validade para Compra</span><span>30 dias</span></div>
+            </div>
+            <button class="btn-primary" onclick="goPME(4)">Ir ao Marketplace →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PS4 MARKETPLACE -->
+    <div id="ps4" class="pme-screen">
+      <div class="wide-col">
+        <div style="margin-bottom:20px;">
+          <div class="section-tag">Passo 4 de 6</div>
+          <div class="page-title">Escolha no <span>Marketplace</span></div>
+          <div class="page-sub">Crédito disponível: <strong style="color:var(--green)">500.000 Kz</strong> — Seleccione produtos de fornecedores certificados.</div>
+        </div>
+        <div class="search-bar"><input class="search-input" placeholder="🔍  Pesquisar produtos e serviços..."><button class="search-btn">Pesquisar</button></div>
+        <div class="cats-filter">
+          <div class="cat-chip active">Todos</div>
+          <div class="cat-chip">💻 Tecnologia</div>
+          <div class="cat-chip">⚙️ Equipamentos</div>
+          <div class="cat-chip">🔧 Serviços</div>
+          <div class="cat-chip">🏗️ Construção</div>
+          <div class="cat-chip">🚛 Logística</div>
+          <div class="cat-chip">🌾 Agronegócio</div>
+        </div>
+        <div class="mp-prod-grid">
+          <div class="prod-card" onclick="goPME(5)"><div class="prod-img" style="background:#EFF4FF">💻</div><div class="prod-body"><div class="cert-badge">✓ Certificado INAPEM</div><div class="prod-cat">Tecnologia</div><div class="prod-name">Computador Desktop Profissional</div><div class="prod-vendor"><span class="vendor-dot"></span>TecnoLuanda, Lda.</div><div class="prod-footer"><div class="prod-price">280.000 <span>Kz</span></div><button class="mp-prod-btn">Seleccionar</button></div></div></div>
+          <div class="prod-card" onclick="goPME(5)"><div class="prod-img" style="background:#E6F4F2">⚙️</div><div class="prod-body"><div class="cert-badge">✓ Certificado INAPEM</div><div class="prod-cat">Equipamentos</div><div class="prod-name">Máquina de Costura Industrial</div><div class="prod-vendor"><span class="vendor-dot"></span>IndustrialTech Luanda</div><div class="prod-footer"><div class="prod-price">450.000 <span>Kz</span></div><button class="mp-prod-btn">Seleccionar</button></div></div></div>
+          <div class="prod-card" onclick="goPME(5)"><div class="prod-img" style="background:#FEF0EB">🌾</div><div class="prod-body"><div class="cert-badge">✓ Certificado INAPEM</div><div class="prod-cat">Agronegócio</div><div class="prod-name">Kit de Irrigação Gotejamento</div><div class="prod-vendor"><span class="vendor-dot"></span>AgroAngola Solutions</div><div class="prod-footer"><div class="prod-price">350.000 <span>Kz</span></div><button class="mp-prod-btn">Seleccionar</button></div></div></div>
+          <div class="prod-card" onclick="goPME(5)"><div class="prod-img" style="background:#F3EFFE">🔧</div><div class="prod-body"><div class="cert-badge">✓ Certificado INAPEM</div><div class="prod-cat">Serviços</div><div class="prod-name">Consultoria em Gestão</div><div class="prod-vendor"><span class="vendor-dot"></span>Consultores Associados</div><div class="prod-footer"><div class="prod-price">200.000 <span>Kz</span></div><button class="mp-prod-btn">Seleccionar</button></div></div></div>
+          <div class="prod-card" onclick="goPME(5)"><div class="prod-img" style="background:#E8F7F0">🖨️</div><div class="prod-body"><div class="cert-badge">✓ Certificado INAPEM</div><div class="prod-cat">Tecnologia</div><div class="prod-name">Impressora Multifunções A3/A4</div><div class="prod-vendor"><span class="vendor-dot"></span>DigitalOffice Angola</div><div class="prod-footer"><div class="prod-price">120.000 <span>Kz</span></div><button class="mp-prod-btn">Seleccionar</button></div></div></div>
+          <div class="prod-card" onclick="goPME(5)"><div class="prod-img" style="background:#FFF8E6">🚛</div><div class="prod-body"><div class="cert-badge">✓ Certificado INAPEM</div><div class="prod-cat">Logística</div><div class="prod-name">Serviço de Armazenagem Mensal</div><div class="prod-vendor"><span class="vendor-dot"></span>LogiStore Angola</div><div class="prod-footer"><div class="prod-price">80.000 <span>Kz</span></div><button class="mp-prod-btn">Seleccionar</button></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PS5 COMPRA -->
+    <div id="ps5" class="pme-screen">
+      <div class="one-col">
+        <div style="margin-bottom:24px;"><div class="section-tag">Passo 5 de 6</div><div class="page-title">Aprovação da <span>Compra</span></div><div class="page-sub">Confirme a sua encomenda. O INAPEM e o banco vão aprovar e pagar directamente ao fornecedor.</div></div>
+        <div class="order-box">
+          <div class="order-head">📦 Resumo da Encomenda</div>
+          <div class="order-item"><div class="oi-emoji">💻</div><div class="oi-info"><div class="oi-name">Computador Desktop Profissional</div><div class="oi-vendor">TecnoLuanda, Lda. · Certificado INAPEM</div></div><div class="oi-price">280.000 Kz</div></div>
+          <div class="order-item"><div class="oi-emoji">🖨️</div><div class="oi-info"><div class="oi-name">Impressora Multifunções A3/A4</div><div class="oi-vendor">DigitalOffice Angola · Certificado INAPEM</div></div><div class="oi-price">120.000 Kz</div></div>
+          <div class="order-total"><span style="font-size:13px;font-weight:800;">Total</span><span style="font-size:18px;font-weight:900;color:var(--orange);">400.000 Kz</span></div>
+        </div>
+        <div class="card" style="margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:800;margin-bottom:14px;">Como funciona o pagamento</div>
+          <div class="pay-flow">
+            <div class="pf-step"><div class="pf-icon">🏛️</div><div class="pf-label">INAPEM</div><div class="pf-sub">Aprova</div></div>
+            <div class="pf-step"><div class="pf-icon">🏦</div><div class="pf-label">Banco</div><div class="pf-sub">Liberta crédito</div></div>
+            <div class="pf-step"><div class="pf-icon">🏪</div><div class="pf-label">Fornecedor</div><div class="pf-sub">Recebe pagamento</div></div>
+            <div class="pf-step"><div class="pf-icon">📦</div><div class="pf-label">Entrega</div><div class="pf-sub">À sua empresa</div></div>
+          </div>
+          <div class="pay-warning">⚠️ O valor nunca passa pela sua conta — é pago directamente ao fornecedor pelo banco parceiro.</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="goPME(4)">← Voltar</button>
+          <button class="btn-primary" onclick="goPME(6)">Confirmar Encomenda →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PS6 DASHBOARD -->
+    <div id="ps6" class="pme-screen">
+      <div class="wide-col">
+        <div style="margin-bottom:24px;"><div class="section-tag">Passo 6 de 6 — Dashboard</div><div class="page-title">Bem-vindo, <span>TecnoLuanda</span> 👋</div><div class="page-sub">Acompanhe o seu crédito, encomendas e prestações em tempo real.</div></div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-label">Crédito Total</div><div class="kpi-value orange">500.000</div><div class="kpi-sub">Kz aprovados</div></div>
+          <div class="kpi-card"><div class="kpi-label">Crédito Usado</div><div class="kpi-value">400.000</div><div class="kpi-sub">Kz em produtos</div></div>
+          <div class="kpi-card"><div class="kpi-label">Disponível</div><div class="kpi-value green">100.000</div><div class="kpi-sub">Kz restantes</div></div>
+          <div class="kpi-card"><div class="kpi-label">Próx. Prestação</div><div class="kpi-value" style="font-size:18px;">45.833 Kz</div><div class="kpi-sub">Vence em 15 dias</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div class="card">
+            <div style="font-size:13px;font-weight:800;margin-bottom:4px;">Plano de Reembolso</div>
+            <div style="font-size:11px;color:var(--gray);margin-bottom:16px;">12 prestações mensais</div>
+            <div class="prest-list">
+              <div class="prest-row"><div><div class="prest-month">Janeiro 2025</div><div class="prest-date">Vencimento: 15 Jan</div></div><div class="prest-val">45.833 Kz</div><div class="chip chip-paid">✓ Pago</div></div>
+              <div class="prest-row"><div><div class="prest-month">Fevereiro 2025</div><div class="prest-date">Vencimento: 15 Fev</div></div><div class="prest-val">45.833 Kz</div><div class="chip chip-pend">⏳ Pendente</div></div>
+              <div class="prest-row"><div><div class="prest-month">Março 2025</div><div class="prest-date">Vencimento: 15 Mar</div></div><div class="prest-val">45.833 Kz</div><div class="chip chip-fut">Em breve</div></div>
+              <div class="prest-row"><div><div class="prest-month">Abril 2025</div><div class="prest-date">Vencimento: 15 Abr</div></div><div class="prest-val">45.833 Kz</div><div class="chip chip-fut">Em breve</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div style="font-size:13px;font-weight:800;margin-bottom:4px;">Actividade Recente</div>
+            <div style="font-size:11px;color:var(--gray);margin-bottom:16px;">Últimas actualizações</div>
+            <div class="act-list">
+              <div class="act-row"><div class="act-dot dot-g"></div><div class="act-text">Encomenda entregue pela TecnoLuanda, Lda.</div><div class="act-time">Hoje</div></div>
+              <div class="act-row"><div class="act-dot dot-o"></div><div class="act-text">Pagamento de 400.000 Kz feito ao fornecedor</div><div class="act-time">Ontem</div></div>
+              <div class="act-row"><div class="act-dot dot-g"></div><div class="act-text">Crédito de 500.000 Kz aprovado pelo BDA</div><div class="act-time">3 dias</div></div>
+              <div class="act-row"><div class="act-dot dot-g"></div><div class="act-text">Candidatura aprovada pelo INAPEM</div><div class="act-time">5 dias</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row" style="justify-content:center;margin-top:20px;">
+          <button class="btn-secondary" onclick="goPME(4)">+ Fazer Nova Compra</button>
+          <button class="btn-primary" style="max-width:240px;">Ver Relatório Completo →</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end sec-pme -->
+
+</div><!-- end main -->
+
+<script>
+const LOGO = "data:image/png;base64,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";
+
+// ── POPUP ──
+function closePopup(role) {
+  document.getElementById('popup').style.display = 'none';
+  document.getElementById('main').classList.add('visible');
+  if (role === 'pme' || role === 'login') {
+    showSection('pme');
+  } else {
+    showSection('home');
+  }
+}
+
+// ── SECTION NAV ──
+function showSection(id) {
+  document.querySelectorAll('.subpage').forEach(p => p.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.tb-cat').forEach((t,i) => {
+    t.classList.toggle('active', ['home','mapa','pme'][i] === id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if (id === 'pme') goPME(1);
+}
+
+// ── PME STEPS ──
+let currentPME = 1;
+function goPME(n) {
+  document.getElementById('ps' + currentPME).classList.remove('active');
+  currentPME = n;
+  document.getElementById('ps' + currentPME).classList.add('active');
+  updatePMEPills();
+  window.scrollTo({top:120,behavior:'smooth'});
+}
+function updatePMEPills() {
+  document.querySelectorAll('.pme-pill').forEach((p,i) => {
+    const s = i+1;
+    p.classList.remove('active','done','inactive');
+    if(s===currentPME) p.classList.add('active');
+    else if(s<currentPME) p.classList.add('done');
+    else p.classList.add('inactive');
+  });
+}
+
+// ── CAT CHIPS ──
+document.querySelectorAll('.cat-chip').forEach(c => {
+  c.addEventListener('click', () => {
+    c.closest('.cats-filter').querySelectorAll('.cat-chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

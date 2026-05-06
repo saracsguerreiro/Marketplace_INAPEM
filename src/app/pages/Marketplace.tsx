@@ -1,0 +1,341 @@
+import { Link } from "react-router";
+import { Search, ChevronLeft, ChevronRight, ShoppingCart, Plus, Minus } from "lucide-react";
+import { useState } from "react";
+import {
+  TechnologyIcon,
+  EquipmentIcon,
+  ServicesIcon,
+  ConstructionIcon,
+  LogisticsIcon,
+  AgricultureIcon,
+  HealthIcon,
+  OthersIcon,
+} from "../components/icons/CategoryIcons";
+import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { useCart } from "../contexts/CartContext";
+
+const mockProducts = [
+  {
+    id: "1",
+    name: "Sistema ERP Completo",
+    category: "Tecnologia",
+    price: 450000,
+    supplier: "TechSolutions Angola",
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1753715613457-63127ec40824?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBvZmZpY2UlMjBzb2Z0d2FyZSUyMHRlY2hub2xvZ3klMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzc3OTk0MzY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "2",
+    name: "Equipamento Industrial Premium",
+    category: "Equipamentos",
+    price: 850000,
+    supplier: "Máquinas Premium",
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1761519609252-3b868e540398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwZXF1aXBtZW50JTIwbWFjaGluZXJ5JTIwZmFjdG9yeXxlbnwxfHx8fDE3Nzc5OTQzNjd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "3",
+    name: "Consultoria Empresarial",
+    category: "Serviços",
+    price: 280000,
+    supplier: "Consulting Pro",
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmclMjBtZWV0aW5nJTIwb2ZmaWNlfGVufDF8fHx8MTc3Nzk5NDM2OHww&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "4",
+    name: "Materiais de Construção",
+    category: "Construção",
+    price: 620000,
+    supplier: "Build Master",
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1773649967822-d3f31c88a16e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBtYXRlcmlhbHMlMjBidWlsZGluZyUyMHN1cHBsaWVzfGVufDF8fHx8MTc3Nzk5NDM2OHww&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "5",
+    name: "Computadores Dell Premium",
+    category: "Tecnologia",
+    price: 185000,
+    supplier: "Tech Store Angola",
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1554246247-6993b606e8b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxsJTIwY29tcHV0ZXIlMjBsYXB0b3AlMjB3b3Jrc3RhdGlvbnxlbnwxfHx8fDE3Nzc5OTQzNjh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "6",
+    name: "Frota de Transporte",
+    category: "Logística",
+    price: 950000,
+    supplier: "TransAngola",
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1776988038414-29a4a1869275?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxkZWxpdmVyeSUyMHRydWNrJTIwZmxlZXQlMjB0cmFuc3BvcnQlMjBsb2dpc3RpY3N8ZW58MXx8fHwxNzc3OTk0Mzc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "7",
+    name: "Equipamento Médico Hospitalar",
+    category: "Saúde",
+    price: 420000,
+    supplier: "MedEquip Angola",
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1710074213379-2a9c2653046a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtZWRpY2FsJTIwZXF1aXBtZW50JTIwaG9zcGl0YWwlMjBoZWFsdGhjYXJlfGVufDF8fHx8MTc3Nzk5NDM3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "8",
+    name: "Software CRM Cloud",
+    category: "Tecnologia",
+    price: 320000,
+    supplier: "CloudSoft Angola",
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1753715613457-63127ec40824?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBvZmZpY2UlMjBzb2Z0d2FyZSUyMHRlY2hub2xvZ3klMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzc3OTk0MzY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "9",
+    name: "Equipamento Agrícola",
+    category: "Agronegócio",
+    price: 680000,
+    supplier: "AgroTech Angola",
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1761519609252-3b868e540398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwZXF1aXBtZW50JTIwbWFjaGluZXJ5JTIwZmFjdG9yeXxlbnwxfHx8fDE3Nzc5OTQzNjd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "10",
+    name: "Ferramentas Industriais",
+    category: "Equipamentos",
+    price: 245000,
+    supplier: "Tools Master",
+    rating: 4.5,
+    image: "https://images.unsplash.com/photo-1761519609252-3b868e540398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwZXF1aXBtZW50JTIwbWFjaGluZXJ5JTIwZmFjdG9yeXxlbnwxfHx8fDE3Nzc5OTQzNjd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "11",
+    name: "Serviços de Marketing Digital",
+    category: "Serviços",
+    price: 180000,
+    supplier: "Digital Boost Angola",
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmclMjBtZWV0aW5nJTIwb2ZmaWNlfGVufDF8fHx8MTc3Nzk5NDM2OHww&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+  {
+    id: "12",
+    name: "Material de Escritório Completo",
+    category: "Outros",
+    price: 95000,
+    supplier: "Office Plus",
+    rating: 4.4,
+    image: "https://images.unsplash.com/photo-1554246247-6993b606e8b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxsJTIwY29tcHV0ZXIlMjBsYXB0b3AlMjB3b3Jrc3RhdGlvbnxlbnwxfHx8fDE3Nzc5OTQzNjh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+  },
+];
+
+export function Marketplace() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const itemsPerPage = 8;
+  const { addToCart } = useCart();
+
+  const getQuantity = (productId: string) => quantities[productId] || 1;
+
+  const incrementQuantity = (productId: string) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: (prev[productId] || 1) + 1,
+    }));
+  };
+
+  const decrementQuantity = (productId: string) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: Math.max(1, (prev[productId] || 1) - 1),
+    }));
+  };
+
+  const categories = [
+    { name: "Todos", icon: null },
+    { name: "Tecnologia", icon: TechnologyIcon },
+    { name: "Equipamentos", icon: EquipmentIcon },
+    { name: "Serviços", icon: ServicesIcon },
+    { name: "Construção", icon: ConstructionIcon },
+    { name: "Logística", icon: LogisticsIcon },
+    { name: "Agronegócio", icon: AgricultureIcon },
+    { name: "Saúde", icon: HealthIcon },
+    { name: "Outros", icon: OthersIcon },
+  ];
+
+  const filteredProducts = mockProducts.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mb-8">
+        <h1 className="mb-4">Produtos e Serviços</h1>
+        <p className="text-muted-foreground">
+          Explore mais de 1.200 produtos e serviços para a sua empresa
+        </p>
+      </div>
+
+      {/* Filtro de Pesquisa */}
+      <div className="mb-8">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Pesquisar produtos e serviços..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-4 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors text-base"
+          />
+        </div>
+      </div>
+
+      {/* Filtro de Categorias */}
+      <div className="mb-10">
+        <h3 className="text-sm text-muted-foreground mb-4 uppercase tracking-wide">Filtrar por Categoria</h3>
+        <div className="flex flex-wrap gap-3">
+          {categories.map((cat) => {
+            const Icon = cat.icon;
+            return (
+              <button
+                key={cat.name}
+                onClick={() => {
+                  setSelectedCategory(cat.name);
+                  setCurrentPage(1);
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 transition-all ${
+                  selectedCategory === cat.name
+                    ? "border-coral bg-coral text-white"
+                    : "border-border bg-white hover:border-coral"
+                }`}
+              >
+                {Icon && <Icon className="w-5 h-5" />}
+                <span>{cat.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Resultados */}
+      <div className="mb-6">
+        <p className="text-muted-foreground">
+          {filteredProducts.length} {filteredProducts.length === 1 ? "produto encontrado" : "produtos encontrados"}
+        </p>
+      </div>
+
+      {/* Grid de Produtos */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
+        {paginatedProducts.map((product) => (
+          <div
+            key={product.id}
+            className="bg-white border-2 border-border rounded-2xl overflow-hidden hover:border-coral hover:shadow-xl transition-all group"
+          >
+            <Link to={`/marketplace/${product.id}`}>
+              <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+                <ImageWithFallback
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </Link>
+            <div className="p-4">
+              <div className="text-xs text-coral mb-2 uppercase tracking-wide">{product.category}</div>
+              <Link to={`/marketplace/${product.id}`}>
+                <h3 className="text-sm mb-2 line-clamp-2 group-hover:text-coral transition-colors">{product.name}</h3>
+              </Link>
+              <div className="text-xs text-muted-foreground mb-3 flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
+                {product.supplier}
+              </div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="font-extrabold text-coral text-lg">{product.price.toLocaleString()} Kz</div>
+              </div>
+
+              {/* Seletor de Quantidade */}
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <button
+                  onClick={() => decrementQuantity(product.id)}
+                  className="w-8 h-8 rounded-lg border-2 border-border hover:border-coral flex items-center justify-center transition-colors"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="text-sm font-semibold w-8 text-center">{getQuantity(product.id)}</span>
+                <button
+                  onClick={() => incrementQuantity(product.id)}
+                  className="w-8 h-8 rounded-lg border-2 border-border hover:border-coral flex items-center justify-center transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              <button
+                onClick={() => {
+                  const qty = getQuantity(product.id);
+                  for (let i = 0; i < qty; i++) {
+                    addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      supplier: product.supplier,
+                      image: product.image,
+                    });
+                  }
+                }}
+                className="w-full bg-coral text-white py-2 px-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5 text-sm"
+              >
+                <ShoppingCart className="w-3.5 h-3.5" />
+                Adicionar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Paginação */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-2 rounded-lg border-2 border-border hover:border-coral disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`w-10 h-10 rounded-lg border-2 transition-all ${
+                currentPage === page
+                  ? "border-coral bg-coral text-white"
+                  : "border-border hover:border-coral"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded-lg border-2 border-border hover:border-coral disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
