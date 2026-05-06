@@ -109,16 +109,35 @@ export function ProductDetail() {
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Coluna esquerda: foto + descrição + características */}
         <div>
-          <div className="aspect-video rounded-2xl overflow-hidden bg-gray-100 mb-4 border-2 border-border">
+          <div className="aspect-video rounded-2xl overflow-hidden bg-gray-100 mb-6 border-2 border-border">
             <img
               src={product.image}
               alt={product.name}
               className="w-full h-full object-cover"
             />
           </div>
+
+          <div className="mb-6">
+            <h3 className="mb-3">Descrição</h3>
+            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+          </div>
+
+          <div>
+            <h3 className="mb-4">Características</h3>
+            <ul className="space-y-3">
+              {product.features.map((feature) => (
+                <li key={feature} className="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-coral flex-shrink-0 mt-0.5" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
+        {/* Coluna direita: info + ações */}
         <div>
           <div className="text-sm text-coral mb-2 uppercase tracking-wide">{product.category}</div>
           <h1 className="mb-4">{product.name}</h1>
@@ -142,7 +161,7 @@ export function ProductDetail() {
           </div>
 
           <div className="mb-6">
-            <div className="text-4xl text-coral mb-2 font-extrabold">
+            <div className="text-2xl text-coral mb-2 font-extrabold">
               {product.price.toLocaleString()} Kz
             </div>
             <div className="text-muted-foreground flex items-center gap-2">
@@ -206,23 +225,6 @@ export function ProductDetail() {
               <ShoppingCart className="w-5 h-5" />
               Adicionar ao Carrinho
             </button>
-          </div>
-
-          <div>
-            <h3 className="mb-4">Características</h3>
-            <ul className="space-y-3">
-              {product.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-coral flex-shrink-0 mt-0.5" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="mt-8">
-            <h3 className="mb-3">Descrição</h3>
-            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
           </div>
         </div>
       </div>
