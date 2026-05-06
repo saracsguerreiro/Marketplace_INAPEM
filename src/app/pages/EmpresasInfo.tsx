@@ -68,7 +68,7 @@ export function EmpresasInfo() {
             </h1>
             <p className="text-sm md:text-base opacity-90 mb-6 leading-relaxed max-w-xl mx-auto">
               Aceda a crédito rápido e sem burocracia. Compre produtos e serviços essenciais
-              para o seu negócio e pague directamente ao fornecedor com condições especiais.
+              para o seu negócio e pague directamente ao fornecedor.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
@@ -82,7 +82,7 @@ export function EmpresasInfo() {
                 to="/marketplace"
                 className="bg-white/10 border-2 border-white/30 backdrop-blur-sm text-white px-6 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/20 transition-colors"
               >
-                Ver Catálogo
+                Ver Produtos e Serviços
               </Link>
             </div>
           </div>
