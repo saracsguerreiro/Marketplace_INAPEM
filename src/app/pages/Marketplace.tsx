@@ -1,5 +1,5 @@
 import { Link, useSearchParams, useNavigate } from "react-router";
-import { Search, ChevronLeft, ChevronRight, ShoppingCart, Plus, Minus, ArrowLeft } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, ShoppingCart, Plus, Minus, ArrowLeft, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
   TechnologyIcon,
@@ -15,6 +15,7 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../contexts/CartContext";
 import { allProducts } from "../data/products";
 import { trackProduct } from "../hooks/useRecommendations";
+import { semanticSearch, getSearchIntent } from "../utils/semanticSearch";
 
 
 export function Marketplace() {
@@ -25,12 +26,12 @@ export function Marketplace() {
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Lê categoria da URL ao carregar (ex: /marketplace?categoria=Saúde)
+  // Lê parâmetros da URL ao carregar
   useEffect(() => {
     const cat = searchParams.get("categoria");
-    if (cat) {
-      setSelectedCategory(cat);
-    }
+    if (cat) setSelectedCategory(cat);
+    const q = searchParams.get("q");
+    if (q) setSearchTerm(q);
   }, [searchParams]);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const itemsPerPage = 8;
@@ -64,12 +65,18 @@ export function Marketplace() {
     { name: "Outros", icon: OthersIcon },
   ];
 
-  const filteredProducts = allProducts.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
-    const matchesType = selectedType === "Todos" || product.type === selectedType.toLowerCase();
-    return matchesSearch && matchesCategory && matchesType;
-  });
+  // Pesquisa semântica sobre todos os produtos
+  const searchResults = semanticSearch(searchTerm, allProducts);
+  const intent = searchTerm.trim() ? getSearchIntent(searchTerm) : null;
+  const isSemanticMatch = intent !== null;
+
+  const filteredProducts = searchResults
+    .map((r) => r.product)
+    .filter((product) => {
+      const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
+      const matchesType = selectedType === "Todos" || product.type === selectedType.toLowerCase();
+      return matchesCategory && matchesType;
+    });
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -129,6 +136,17 @@ export function Marketplace() {
           />
         </div>
       </div>
+
+      {/* Indicador de pesquisa semântica */}
+      {isSemanticMatch && (
+        <div className="mb-4 flex items-center gap-2 px-4 py-3 bg-coral/5 border border-coral/20 rounded-xl text-sm">
+          <Sparkles className="w-4 h-4 text-coral flex-shrink-0" />
+          <span className="text-muted-foreground">
+            Pesquisa inteligente: a mostrar resultados relacionados com{" "}
+            <span className="font-semibold text-coral">"{intent}"</span>
+          </span>
+        </div>
+      )}
 
       {/* Filtro de Categorias */}
       <div className="mb-10">

@@ -208,17 +208,27 @@ export function NewHome() {
             <h2 className="text-2xl md:text-3xl mb-3">O que procura para a sua empresa?</h2>
             <p className="text-muted-foreground">Pesquise em mais de 1.200 produtos e serviços</p>
           </div>
-          <div className="relative">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Ex: Software de gestão, equipamento industrial, consultoria..."
-              className="w-full pl-16 pr-6 py-5 text-base border-2 border-border rounded-2xl focus:outline-none focus:border-coral transition-colors shadow-lg"
-            />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-coral text-white px-8 py-3 rounded-xl hover:opacity-90 transition-opacity">
-              Pesquisar
-            </button>
-          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const q = (e.currentTarget.elements.namedItem("q") as HTMLInputElement).value.trim();
+              if (q) navigate(`/marketplace?q=${encodeURIComponent(q)}`);
+              else navigate("/marketplace");
+            }}
+          >
+            <div className="relative">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground" />
+              <input
+                name="q"
+                type="text"
+                placeholder="Ex: gerir pessoal, transportar mercadoria, equipamento médico..."
+                className="w-full pl-16 pr-6 py-5 text-base border-2 border-border rounded-2xl focus:outline-none focus:border-coral transition-colors shadow-lg"
+              />
+              <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-coral text-white px-8 py-3 rounded-xl hover:opacity-90 transition-opacity">
+                Pesquisar
+              </button>
+            </div>
+          </form>
         </div>
       </section>
 
