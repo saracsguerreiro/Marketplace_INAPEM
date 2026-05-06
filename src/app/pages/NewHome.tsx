@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import bannerImage from "../../imports/Firefly_improve_your_business_2.jpg";
 import { Search, Star, ArrowRight, CheckCircle, ShoppingCart } from "lucide-react";
 import { WelcomePopup } from "../components/WelcomePopup";
 import { LoginModal } from "../components/LoginModal";
@@ -164,7 +165,7 @@ export function NewHome() {
       <section className="relative text-white overflow-hidden min-h-[320px] flex items-center">
         <div className="absolute inset-0">
           <img
-            src="/src/imports/Firefly_improve_your_business_2-1.jpg"
+            src={bannerImage}
             alt="Business Growth"
             className="w-full h-full object-cover"
           />
