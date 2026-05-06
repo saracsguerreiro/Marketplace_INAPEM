@@ -333,13 +333,13 @@ export function NewHome() {
               <p className="text-sm opacity-90 mb-6 max-w-xs leading-relaxed">
                 Aprovação rápida e taxas competitivas para impulsionar o seu negócio
               </p>
-              <Link
-                to="/pme/fluxo"
+              <button
+                onClick={() => setLoginModalOpen(true)}
                 className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-xl"
               >
                 Solicitar
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -357,13 +357,13 @@ export function NewHome() {
               <p className="text-sm opacity-90 mb-6 max-w-xs leading-relaxed">
                 Junte-se ao marketplace e venda para centenas de empresas
               </p>
-              <Link
-                to="/fornecedor/dashboard"
+              <button
+                onClick={() => setLoginModalOpen(true)}
                 className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-xl"
               >
                 Registar Empresa
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </button>
             </div>
           </div>
         </section>
