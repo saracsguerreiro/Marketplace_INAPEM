@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Bot } from "lucide-react";
+import { MessageCircle, X, Send, Bot, ArrowLeft } from "lucide-react";
+
+type Topic = null | "financiamento" | "fornecedor" | "marketplace" | "outro";
 
 interface Message {
   id: number;
@@ -7,124 +9,182 @@ interface Message {
   text: string;
 }
 
-const quickReplies = [
-  "Quanto posso financiar?",
-  "Que documentos preciso?",
-  "Quanto tempo demora?",
-  "Como funciona o pagamento?",
-  "Quem pode candidatar-se?",
-];
+// ── Respostas por tema ────────────────────────────────────────────────
 
-function getResponse(input: string): string {
-  const msg = input.toLowerCase();
-
-  if (msg.includes("olá") || msg.includes("ola") || msg.includes("bom dia") || msg.includes("boa tarde") || msg.includes("boa noite") || msg.includes("oi")) {
-    return "Olá! 👋 Sou o Assistente INAPEM. Estou aqui para o ajudar com todas as suas dúvidas sobre financiamento. Como posso ajudar?";
-  }
-
-  if (msg.includes("quanto") && (msg.includes("financ") || msg.includes("valor") || msg.includes("máximo") || msg.includes("maximo"))) {
-    return "💰 O INAPEM oferece financiamento até **1.000.000 Kz** (1 milhão de Kwanzas). O valor aprovado depende da análise de crédito da sua empresa, do volume de negócios e da finalidade do financiamento.";
-  }
-
-  if (msg.includes("document")) {
-    return "📋 Para solicitar financiamento precisa de:\n\n• Certidão comercial da empresa\n• Estatutos sociais\n• Declaração fiscal recente\n• Extratos bancários dos últimos 3 meses\n• BI/Passaporte dos sócios\n• Plano de negócios (opcional mas recomendado)";
-  }
-
-  if (msg.includes("tempo") || msg.includes("demora") || msg.includes("prazo") || msg.includes("rapidez") || msg.includes("48")) {
-    return "⏱️ O processo de análise demora até **48 horas** após a entrega completa da documentação. Em casos mais complexos pode demorar até 5 dias úteis. Receberá uma notificação por email com a decisão.";
-  }
-
-  if (msg.includes("pagamento") || msg.includes("pagar") || msg.includes("prestação") || msg.includes("prestacao") || msg.includes("reembolso")) {
-    return "💳 O pagamento funciona assim:\n\n1. O INAPEM paga **directamente ao fornecedor**\n2. A sua empresa paga ao INAPEM em **prestações mensais**\n3. As taxas são as mais competitivas do mercado angolano\n4. O prazo de reembolso é negociado caso a caso";
-  }
-
-  if (msg.includes("quem") || msg.includes("elegível") || msg.includes("elegivel") || msg.includes("candidat") || msg.includes("pme") || msg.includes("empresa")) {
-    return "🏢 Podem candidatar-se ao financiamento:\n\n• Pequenas e Médias Empresas (PMEs) angolanas\n• Empresas com pelo menos 1 ano de actividade\n• Empresas com situação fiscal regularizada\n• Empresas com conta bancária activa em Angola";
-  }
-
-  if (msg.includes("taxa") || msg.includes("juro") || msg.includes("juros") || msg.includes("custo")) {
-    return "📊 As taxas de juro do INAPEM são as mais competitivas do mercado angolano. O valor exacto é definido na análise de crédito e depende do perfil da empresa e do montante solicitado. Contacte-nos para uma simulação personalizada.";
-  }
-
-  if (msg.includes("como") && msg.includes("solicitar") || msg.includes("começar") || msg.includes("comecar") || msg.includes("iniciar") || msg.includes("processo")) {
-    return "🚀 Para solicitar financiamento:\n\n1. **Registe-se** na plataforma como Empresa\n2. **Escolha** os produtos/serviços no Marketplace\n3. **Submeta** o pedido de financiamento\n4. **Envie** a documentação necessária\n5. **Aguarde** a aprovação em até 48h\n\nQuer que o ajude a começar agora?";
-  }
-
-  if (msg.includes("fornecedor") || msg.includes("produto") || msg.includes("comprar") || msg.includes("serviço")) {
-    return "🛒 No Marketplace INAPEM encontra mais de **1.200 produtos e serviços** de fornecedores certificados. Pode filtrar por categoria (Tecnologia, Equipamentos, Serviços, etc.) e solicitar financiamento directamente para os itens que escolher.";
-  }
-
-  if (msg.includes("contacto") || msg.includes("contato") || msg.includes("falar") || msg.includes("humano") || msg.includes("atendente")) {
-    return "📞 Para falar com um consultor INAPEM:\n\n• **Email:** suporte@inapem.pt\n• **Telefone:** +351 21 000 0000\n• **Horário:** Segunda a Sexta, 8h–17h\n\nTambém pode submeter o seu pedido online e entraremos em contacto em 48h.";
-  }
-
-  if (msg.includes("obrigad") || msg.includes("obrigado") || msg.includes("obrigada") || msg.includes("ótimo") || msg.includes("otimo") || msg.includes("excelente")) {
-    return "De nada! 😊 Estou sempre disponível para ajudar. Se tiver mais alguma dúvida sobre o financiamento INAPEM, é só perguntar!";
-  }
-
-  return "Não tenho uma resposta específica para essa questão, mas posso ajudar com:\n\n• Valores de financiamento disponíveis\n• Documentos necessários\n• Prazos de aprovação\n• Como funciona o pagamento\n• Quem pode candidatar-se\n\nO que gostaria de saber?";
+function getFinancingResponse(msg: string): string {
+  if (/quanto|valor|máximo|maximo|financ/i.test(msg))
+    return "💰 O INAPEM oferece financiamento até **1.000.000 Kz**. O valor aprovado depende da análise de crédito, volume de negócios e finalidade.";
+  if (/document/i.test(msg))
+    return "📋 Documentos necessários:\n\n• Certidão comercial\n• Estatutos sociais\n• Declaração fiscal recente\n• Extratos bancários (3 meses)\n• BI/Passaporte dos sócios";
+  if (/tempo|demora|prazo|48/i.test(msg))
+    return "⏱️ A análise demora até **48 horas** após entrega completa da documentação. Em casos complexos pode ir até 5 dias úteis.";
+  if (/pagamento|pagar|prestação|reembolso/i.test(msg))
+    return "💳 O INAPEM paga **directamente ao fornecedor**. A empresa paga ao INAPEM em **prestações mensais** negociadas caso a caso.";
+  if (/quem|elegível|candidat|pme/i.test(msg))
+    return "🏢 Podem candidatar-se:\n\n• PMEs angolanas\n• Pelo menos 1 ano de actividade\n• Situação fiscal regularizada\n• Conta bancária activa em Angola";
+  if (/taxa|juro|custo/i.test(msg))
+    return "📊 As taxas são as mais competitivas do mercado angolano. O valor exacto depende do perfil da empresa e montante solicitado.";
+  if (/como|solicitar|começar|iniciar|processo/i.test(msg))
+    return "🚀 Para solicitar:\n\n1. Registe-se como Empresa\n2. Escolha produtos no Marketplace\n3. Submeta o pedido\n4. Envie a documentação\n5. Aguarde aprovação em 48h";
+  if (/contacto|falar|humano/i.test(msg))
+    return "📞 Contacto:\n\n• **Email:** suporte@inapem.pt\n• **Telefone:** +351 21 000 0000\n• **Horário:** Seg–Sex, 8h–17h";
+  return "Posso ajudar com: valores disponíveis, documentos, prazos, pagamentos ou elegibilidade. O que gostaria de saber?";
 }
 
+function getSupplierResponse(msg: string): string {
+  if (/comissão|comissao|percentagem|taxa/i.test(msg))
+    return "💼 A comissão do marketplace varia entre **5% e 10%** dependendo da categoria do produto. É descontada automaticamente no momento do pagamento.";
+  if (/quando|pagamento|receber|recebo/i.test(msg))
+    return "💳 O pagamento é processado **até 5 dias úteis** após a confirmação da entrega pelo comprador. É transferido directamente para a conta registada.";
+  if (/entreg|envio|logística/i.test(msg))
+    return "🚚 A entrega é da responsabilidade do fornecedor. Deve actualizar o estado no dashboard. O comprador é notificado automaticamente em cada etapa.";
+  if (/listar|publicar|adicionar|produto/i.test(msg))
+    return "🛒 Para listar produtos:\n\n1. Aceda ao seu Dashboard\n2. Clique em \"Novo Produto\"\n3. Preencha nome, categoria, preço e foto\n4. Submeta para aprovação (24–48h)";
+  if (/reclamação|devoluç|problema|disputa/i.test(msg))
+    return "⚠️ Em caso de reclamação:\n\n1. O comprador abre um ticket\n2. Tem **48h** para responder\n3. Se não houver resolução, o INAPEM medeia\n4. Reembolso automático se aplicável";
+  if (/visibilidade|destaque|promover/i.test(msg))
+    return "📈 Para aumentar visibilidade:\n\n• Mantenha preços competitivos\n• Adicione fotos de qualidade\n• Responda rapidamente às encomendas\n• Solicite avaliações aos compradores";
+  if (/factura|fatura|documento/i.test(msg))
+    return "🧾 A factura é gerada automaticamente pela plataforma após cada venda. Pode consultar e descarregar todas as facturas no seu Dashboard.";
+  if (/contacto|ajuda|humano/i.test(msg))
+    return "📞 Suporte a fornecedores:\n\n• **Email:** fornecedores@inapem.pt\n• **Telefone:** +351 21 000 0001\n• **Horário:** Seg–Sex, 8h–17h";
+  return "Posso ajudar com: comissões, pagamentos, entregas, listagem de produtos ou reclamações. O que precisa de saber?";
+}
+
+function getMarketplaceResponse(msg: string): string {
+  if (/pesquis|encontrar|procur/i.test(msg))
+    return "🔍 Use a barra de pesquisa no topo da página Produtos e Serviços. A nossa **pesquisa inteligente** entende frases como \"gerir pessoal\" ou \"transportar mercadoria\".";
+  if (/categoria|filtro/i.test(msg))
+    return "🗂️ Pode filtrar por categoria (Tecnologia, Equipamentos, Serviços, etc.) e por tipo (Produto ou Serviço). Os filtros estão no topo da página Produtos e Serviços.";
+  if (/carrinho|comprar|adicionar/i.test(msg))
+    return "🛒 Clique em **Adicionar** em qualquer produto para o colocar no carrinho. No carrinho pode ajustar quantidades e solicitar financiamento.";
+  if (/avaliaç|rating|estrela/i.test(msg))
+    return "⭐ Cada produto mostra a avaliação média dos compradores. Quanto mais estrelas, maior a satisfação de quem já comprou.";
+  if (/recomend/i.test(msg))
+    return "✨ A plataforma recomenda produtos com base no que explorou. Quanto mais navegar, mais personalizadas ficam as sugestões.";
+  return "Posso ajudar com: como pesquisar, filtrar categorias, adicionar ao carrinho ou perceber as recomendações. O que precisa?";
+}
+
+function getOtherResponse(msg: string): string {
+  if (/regist|conta|criar/i.test(msg))
+    return "📝 Para criar uma conta:\n\n• **Empresa:** clique em \"Entrar\" → registe-se como Empresa\n• **Fornecedor:** clique em \"Entrar\" → registe-se como Fornecedor\n\nO processo demora menos de 5 minutos.";
+  if (/inapem|quem|organização/i.test(msg))
+    return "🏛️ O **INAPEM** é o Instituto Nacional de Apoio às Micro, Pequenas e Médias Empresas de Angola. A nossa missão é apoiar o crescimento das PMEs angolanas através de financiamento e acesso a fornecedores certificados.";
+  if (/contacto|falar|ajuda|humano/i.test(msg))
+    return "📞 Contacto geral:\n\n• **Email:** info@inapem.pt\n• **Telefone:** +351 21 000 0000\n• **Horário:** Seg–Sex, 8h–17h";
+  if (/segurança|dados|privacidade/i.test(msg))
+    return "🔒 A plataforma utiliza encriptação SSL e cumpre as normas de protecção de dados. Os seus dados nunca são partilhados com terceiros sem consentimento.";
+  return "Para dúvidas mais específicas pode contactar-nos em **info@inapem.pt**. Posso tentar ajudar com mais alguma questão?";
+}
+
+function getResponse(msg: string, topic: Topic): string {
+  if (/obrigad|obrigado|obrigada|ótimo|otimo|excelente|perfeito/i.test(msg))
+    return "De nada! 😊 Estou sempre disponível. Se tiver mais dúvidas é só perguntar!";
+  switch (topic) {
+    case "financiamento": return getFinancingResponse(msg);
+    case "fornecedor":    return getSupplierResponse(msg);
+    case "marketplace":  return getMarketplaceResponse(msg);
+    case "outro":        return getOtherResponse(msg);
+    default:             return "";
+  }
+}
+
+// Sugestões rápidas por tema
+const quickRepliesByTopic: Record<NonNullable<Topic>, string[]> = {
+  financiamento: ["Quanto posso financiar?", "Que documentos preciso?", "Quanto tempo demora?", "Como funciona o pagamento?"],
+  fornecedor:    ["Como funciona a comissão?", "Quando recebo o pagamento?", "Como listar produtos?", "E as reclamações?"],
+  marketplace:   ["Como pesquisar produtos?", "Como filtrar categorias?", "Como funciona o carrinho?", "O que são recomendações?"],
+  outro:         ["O que é o INAPEM?", "Como criar uma conta?", "Contactos", "Segurança dos dados"],
+};
+
+const topicLabels: Record<NonNullable<Topic>, string> = {
+  financiamento: "💰 Financiamento",
+  fornecedor:    "🏪 Fornecedores",
+  marketplace:   "🛒 Marketplace",
+  outro:         "❓ Outro",
+};
+
+// ── Componente ────────────────────────────────────────────────────────
+
 export function FinancingAssistant() {
-  const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 0,
-      from: "assistant",
-      text: "Olá! 👋 Sou o **Assistente INAPEM**. Estou aqui para responder às suas dúvidas sobre financiamento. Como posso ajudar?",
-    },
-  ]);
-  const [input, setInput] = useState("");
+  const [open, setOpen]       = useState(false);
+  const [topic, setTopic]     = useState<Topic>(null);
+  const [input, setInput]     = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const welcome: Message = {
+    id: 0,
+    from: "assistant",
+    text: "Olá! 👋 Sou o **Assistente INAPEM**.\n\nSobre o que gostaria de tirar dúvidas hoje?",
+  };
+
+  const [messages, setMessages] = useState<Message[]>([welcome]);
+
   useEffect(() => {
-    if (open) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
+    if (open) messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
 
-  const sendMessage = (text: string) => {
-    if (!text.trim()) return;
+  const handleTopicSelect = (t: NonNullable<Topic>) => {
+    setTopic(t);
+    const userMsg: Message = { id: Date.now(), from: "user", text: topicLabels[t] };
+    const botMsg: Message  = {
+      id: Date.now() + 1,
+      from: "assistant",
+      text: {
+        financiamento: "Óptimo! Pode perguntar sobre valores, documentos, prazos, pagamentos ou elegibilidade. Como posso ajudar?",
+        fornecedor:    "Perfeito! Pode perguntar sobre comissões, pagamentos, entregas, listagem de produtos ou reclamações. O que precisa?",
+        marketplace:   "Claro! Pode perguntar sobre como pesquisar, filtrar, carrinho ou recomendações. Em que posso ajudar?",
+        outro:         "Sem problema! Pergunte à vontade sobre o INAPEM, registos, segurança ou qualquer outro assunto.",
+      }[t],
+    };
+    setMessages((prev) => [...prev, userMsg, botMsg]);
+  };
 
-    const userMessage: Message = { id: Date.now(), from: "user", text };
-    setMessages((prev) => [...prev, userMessage]);
+  const sendMessage = (text: string) => {
+    if (!text.trim() || !topic) return;
+    const userMsg: Message = { id: Date.now(), from: "user", text };
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsTyping(true);
-
     setTimeout(() => {
-      const reply: Message = {
-        id: Date.now() + 1,
-        from: "assistant",
-        text: getResponse(text),
-      };
+      const reply: Message = { id: Date.now() + 1, from: "assistant", text: getResponse(text, topic) };
       setMessages((prev) => [...prev, reply]);
       setIsTyping(false);
     }, 800);
   };
 
-  const formatText = (text: string) => {
-    return text.split("\n").map((line, i) => {
-      const bold = line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-      return <p key={i} className="mb-1 last:mb-0" dangerouslySetInnerHTML={{ __html: bold }} />;
-    });
+  const resetTopic = () => {
+    setTopic(null);
+    setMessages([welcome]);
+    setInput("");
   };
+
+  const formatText = (text: string) =>
+    text.split("\n").map((line, i) => {
+      const html = line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      return <p key={i} className="mb-1 last:mb-0" dangerouslySetInnerHTML={{ __html: html }} />;
+    });
 
   return (
     <>
-      {/* Painel de Chat */}
       {open && (
         <div className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-2xl shadow-2xl border border-border z-50 flex flex-col overflow-hidden" style={{ maxHeight: "70vh" }}>
           {/* Header */}
           <div className="bg-coral text-white px-4 py-3 flex items-center gap-3">
+            {topic && (
+              <button onClick={resetTopic} className="hover:bg-white/20 rounded-lg p-1 transition-colors">
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            )}
             <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center">
               <Bot className="w-5 h-5" />
             </div>
             <div>
               <div className="font-semibold text-sm">Assistente INAPEM</div>
               <div className="text-xs text-white/80 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 bg-green-300 rounded-full inline-block"></span>
-                Online
+                <span className="w-1.5 h-1.5 bg-green-300 rounded-full inline-block" />
+                {topic ? topicLabels[topic] : "Online"}
               </div>
             </div>
             <button onClick={() => setOpen(false)} className="ml-auto hover:bg-white/20 rounded-lg p-1 transition-colors">
@@ -158,9 +218,9 @@ export function FinancingAssistant() {
                 </div>
                 <div className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
                   <div className="flex gap-1 items-center">
-                    <span className="w-2 h-2 bg-coral/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                    <span className="w-2 h-2 bg-coral/40 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                    <span className="w-2 h-2 bg-coral/40 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                    <span className="w-2 h-2 bg-coral/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-2 h-2 bg-coral/40 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-2 h-2 bg-coral/40 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
                 </div>
               </div>
@@ -168,39 +228,56 @@ export function FinancingAssistant() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Respostas Rápidas */}
-          {messages.length <= 1 && (
-            <div className="px-3 py-2 bg-gray-50 border-t border-border flex gap-2 overflow-x-auto scrollbar-hide">
-              {quickReplies.map((reply) => (
+          {/* Selecção de tema (estado inicial) */}
+          {!topic && (
+            <div className="px-4 py-4 bg-gray-50 border-t border-border grid grid-cols-2 gap-2">
+              {(["financiamento", "fornecedor", "marketplace", "outro"] as NonNullable<Topic>[]).map((t) => (
                 <button
-                  key={reply}
-                  onClick={() => sendMessage(reply)}
-                  className="shrink-0 text-xs bg-white border border-coral text-coral px-3 py-1.5 rounded-full hover:bg-coral hover:text-white transition-colors whitespace-nowrap"
+                  key={t}
+                  onClick={() => handleTopicSelect(t)}
+                  className="text-sm bg-white border-2 border-border hover:border-coral hover:text-coral text-foreground px-3 py-2.5 rounded-xl transition-all font-medium"
                 >
-                  {reply}
+                  {topicLabels[t]}
                 </button>
               ))}
             </div>
           )}
 
-          {/* Input */}
-          <div className="p-3 border-t border-border bg-white flex gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
-              placeholder="Escreva a sua dúvida..."
-              className="flex-1 text-sm border border-border rounded-xl px-3 py-2 focus:outline-none focus:border-coral transition-colors"
-            />
-            <button
-              onClick={() => sendMessage(input)}
-              disabled={!input.trim()}
-              className="bg-coral text-white w-9 h-9 rounded-xl flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </div>
+          {/* Sugestões rápidas após selecção de tema */}
+          {topic && messages.length <= 3 && (
+            <div className="px-3 py-2 bg-gray-50 border-t border-border flex gap-2 overflow-x-auto">
+              {quickRepliesByTopic[topic].map((r) => (
+                <button
+                  key={r}
+                  onClick={() => sendMessage(r)}
+                  className="shrink-0 text-xs bg-white border border-coral text-coral px-3 py-1.5 rounded-full hover:bg-coral hover:text-white transition-colors whitespace-nowrap"
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Input (só disponível após selecção de tema) */}
+          {topic && (
+            <div className="p-3 border-t border-border bg-white flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
+                placeholder="Escreva a sua dúvida..."
+                className="flex-1 text-sm border border-border rounded-xl px-3 py-2 focus:outline-none focus:border-coral transition-colors"
+              />
+              <button
+                onClick={() => sendMessage(input)}
+                disabled={!input.trim()}
+                className="bg-coral text-white w-9 h-9 rounded-xl flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -211,7 +288,7 @@ export function FinancingAssistant() {
       >
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
         {!open && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></span>
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
         )}
       </button>
     </>
