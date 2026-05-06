@@ -29,7 +29,10 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --include=optional
+
+      - name: Install peer dependencies
+        run: pnpm add react@18.3.1 react-dom@18.3.1
 
       - name: Build
         run: pnpm build
