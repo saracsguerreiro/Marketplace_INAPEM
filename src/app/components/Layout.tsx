@@ -5,6 +5,7 @@ import inapemLogo from "../../imports/inapem_MARKETPLACE_w.png";
 import inapemLogoFooter from "../../imports/inapem-seeklogo-1.png";
 import { LoginModal } from "./LoginModal";
 import { FinancingAssistant } from "./FinancingAssistant";
+import { NotificationBell } from "./NotificationBell";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
 
@@ -70,6 +71,8 @@ export function Layout() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
+              {userType === "fornecedor" && <NotificationBell />}
+
               <Link to="/carrinho" className="p-2 rounded-lg hover:bg-primary-foreground/10 transition-colors relative">
                 <ShoppingCart className="w-5 h-5" />
                 {totalItems > 0 && (
