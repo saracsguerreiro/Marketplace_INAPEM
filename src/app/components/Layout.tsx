@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router";
+import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { ShoppingCart, LogIn, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import inapemLogo from "../../imports/inapem_MARKETPLACE_w.png";
@@ -11,11 +11,19 @@ import { useCart } from "../contexts/CartContext";
 
 export function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [language, setLanguage] = useState("PT");
   const { userType, login, logout } = useAuth();
   const { totalItems } = useCart();
+
+  const handleLogin = (type: "empresa" | "fornecedor" | "gestor") => {
+    login(type);
+    if (type === "empresa") navigate("/empresa/dashboard");
+    else if (type === "fornecedor") navigate("/fornecedor/dashboard");
+    else if (type === "gestor") navigate("/gestor/dashboard");
+  };
 
   const getNavigation = () => {
     const baseNav = [
@@ -28,6 +36,8 @@ export function Layout() {
       return [...baseNav, { name: "Dashboard", path: "/empresa/dashboard" }];
     } else if (userType === "fornecedor") {
       return [...baseNav, { name: "Dashboard", path: "/fornecedor/dashboard" }];
+    } else if (userType === "gestor") {
+      return [{ name: "Painel de Gestão", path: "/gestor/dashboard" }];
     } else {
       return baseNav;
     }
@@ -73,14 +83,16 @@ export function Layout() {
             <div className="hidden md:flex items-center gap-4">
               {(userType === "fornecedor" || userType === "empresa") && <NotificationBell />}
 
-              <Link to="/carrinho" className="p-2 rounded-lg hover:bg-primary-foreground/10 transition-colors relative">
-                <ShoppingCart className="w-5 h-5" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-coral text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
-              </Link>
+              {userType !== "gestor" && (
+                <Link to="/carrinho" className="p-2 rounded-lg hover:bg-primary-foreground/10 transition-colors relative">
+                  <ShoppingCart className="w-5 h-5" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-coral text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                      {totalItems}
+                    </span>
+                  )}
+                </Link>
+              )}
 
               <div className="flex items-center gap-1 bg-primary-foreground/10 rounded-lg p-1">
                 <button
@@ -227,7 +239,7 @@ export function Layout() {
       <LoginModal
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
-        onLogin={login}
+        onLogin={handleLogin}
       />
       <FinancingAssistant />
     </div>

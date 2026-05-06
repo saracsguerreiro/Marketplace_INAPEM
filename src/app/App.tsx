@@ -14,6 +14,7 @@ import { EmpresaRegisto } from "./pages/EmpresaRegisto";
 import { FornecedorRegisto } from "./pages/FornecedorRegisto";
 import { Cart } from "./pages/Cart";
 import { Notifications } from "./pages/Notifications";
+import { ManagerDashboard } from "./pages/ManagerDashboard";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="fornecedor/dashboard" element={<SupplierDashboard />} />
               <Route path="login" element={<Login />} />
               <Route path="notificacoes" element={<Notifications />} />
+              <Route path="gestor/dashboard" element={<ManagerDashboard />} />
             </Route>
           </Routes>
         </HashRouter>

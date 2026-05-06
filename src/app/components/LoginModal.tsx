@@ -4,11 +4,11 @@ import { X } from "lucide-react";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (userType: "empresa" | "fornecedor") => void;
+  onLogin: (userType: "empresa" | "fornecedor" | "gestor") => void;
 }
 
 export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
-  const [activeTab, setActiveTab] = useState<"empresa" | "fornecedor">("empresa");
+  const [activeTab, setActiveTab] = useState<"empresa" | "fornecedor" | "gestor">("empresa");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -38,26 +38,19 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
         </div>
 
         <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl">
-          <button
-            onClick={() => setActiveTab("empresa")}
-            className={`flex-1 py-2 px-4 rounded-lg transition-all ${
-              activeTab === "empresa"
-                ? "bg-white shadow text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Empresa
-          </button>
-          <button
-            onClick={() => setActiveTab("fornecedor")}
-            className={`flex-1 py-2 px-4 rounded-lg transition-all ${
-              activeTab === "fornecedor"
-                ? "bg-white shadow text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Fornecedor
-          </button>
+          {(["empresa", "fornecedor", "gestor"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-2 px-2 rounded-lg text-sm transition-all ${
+                activeTab === tab
+                  ? "bg-white shadow text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab === "empresa" ? "Empresa" : tab === "fornecedor" ? "Fornecedor" : "Gestor"}
+            </button>
+          ))}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -105,7 +98,7 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
             type="submit"
             className="w-full bg-coral text-white py-3 rounded-xl hover:opacity-90 transition-opacity"
           >
-            Entrar como {activeTab === "empresa" ? "Empresa" : "Fornecedor"}
+            Entrar como {activeTab === "empresa" ? "Empresa" : activeTab === "fornecedor" ? "Fornecedor" : "Gestor INAPEM"}
           </button>
         </form>
 
