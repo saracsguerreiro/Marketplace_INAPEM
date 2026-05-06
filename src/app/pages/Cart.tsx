@@ -131,9 +131,28 @@ export function Cart() {
               <span className="font-bold text-coral">{totalPrice.toLocaleString()} Kz</span>
             </div>
 
+            {/* Simulação de financiamento */}
+            <div className="bg-secondary rounded-xl p-4 mb-6">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-3">Financiamento disponível</p>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">12x de</span>
+                  <span className="font-semibold">{Math.round(totalPrice / 12).toLocaleString()} Kz/mês</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">24x de</span>
+                  <span className="font-semibold">{Math.round(totalPrice / 24).toLocaleString()} Kz/mês</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">36x de</span>
+                  <span className="font-semibold">{Math.round(totalPrice / 36).toLocaleString()} Kz/mês</span>
+                </div>
+              </div>
+            </div>
+
             <button
               onClick={handleSolicitarFinanciamento}
-              className="w-full bg-coral text-white py-4 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 mb-3"
+              className="w-full bg-coral text-white py-4 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 font-semibold mb-3"
             >
               Solicitar Financiamento
               <ArrowRight className="w-5 h-5" />
