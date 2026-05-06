@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createHashRouter } from "react-router";
 import { NewHome } from "./pages/NewHome";
 import { Marketplace } from "./pages/Marketplace";
 import { Financing } from "./pages/Financing";
@@ -14,8 +14,7 @@ import { FornecedorRegisto } from "./pages/FornecedorRegisto";
 import { Cart } from "./pages/Cart";
 import { Layout } from "./components/Layout";
 
-export const router = createBrowserRouter(
-  [
+export const router = createHashRouter([
     {
       path: "/",
       Component: Layout,
@@ -35,6 +34,4 @@ export const router = createBrowserRouter(
         { path: "login", Component: Login },
       ],
     },
-  ],
-  { basename: "/Marketplace_INAPEM" }
-);
+]);
