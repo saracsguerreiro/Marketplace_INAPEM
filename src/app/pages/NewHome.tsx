@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { RecommendedProducts } from "../components/RecommendedProducts";
+import { useRecommendations } from "../hooks/useRecommendations";
 import bannerImage from "../../imports/Firefly_improve_your_business_2.jpg";
 import { Search, Star, ArrowRight, CheckCircle, ShoppingCart } from "lucide-react";
 import { WelcomePopup } from "../components/WelcomePopup";
@@ -23,6 +25,7 @@ import {
 
 export function NewHome() {
   const [showWelcome, setShowWelcome] = useState(true);
+  const recommended = useRecommendations();
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const { userType, login } = useAuth();
@@ -424,6 +427,17 @@ export function NewHome() {
             ))}
           </div>
         </section>
+
+        {/* RECOMENDADOS */}
+        {recommended.length > 0 && (
+          <div className="mb-16">
+            <RecommendedProducts
+              products={recommended}
+              title="Recomendados para si"
+              subtitle="Com base nos produtos que explorou recentemente"
+            />
+          </div>
+        )}
 
         {/* CTA FINAL */}
         <section className="bg-gradient-to-r from-coral to-coral/80 rounded-3xl p-12 mb-16 text-center text-white relative overflow-hidden">

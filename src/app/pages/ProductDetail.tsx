@@ -1,9 +1,11 @@
 import { useParams, Link, useNavigate } from "react-router";
 import { Star, CheckCircle, ArrowLeft, Plus, Minus, ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { LoginModal } from "../components/LoginModal";
+import { RecommendedProducts } from "../components/RecommendedProducts";
+import { useRecommendations, trackProduct } from "../hooks/useRecommendations";
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -16,7 +18,7 @@ export function ProductDetail() {
   const product = {
     id: id || "1",
     name: "Software de Gestão ERP",
-    category: "Software",
+    category: "Tecnologia",
     price: 450000,
     supplier: "TechSolutions Angola",
     rating: 4.8,
@@ -84,6 +86,12 @@ export function ProductDetail() {
     }
     navigate("/pme/fluxo");
   };
+
+  const similarProducts = useRecommendations(product.id, product.category);
+
+  useEffect(() => {
+    trackProduct(product.id, product.category);
+  }, [product.id, product.category]);
 
   const incrementQuantity = () => setQuantity(quantity + 1);
   const decrementQuantity = () => {
@@ -218,6 +226,12 @@ export function ProductDetail() {
           </div>
         </div>
       </div>
+
+      <RecommendedProducts
+        products={similarProducts}
+        title="Empresas como a sua também compraram..."
+        subtitle="Produtos e serviços relacionados com o que está a ver"
+      />
 
       <LoginModal
         isOpen={loginModalOpen}
