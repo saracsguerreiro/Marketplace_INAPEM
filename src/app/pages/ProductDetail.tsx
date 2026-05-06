@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { LoginModal } from "../components/LoginModal";
 import { RecommendedProducts } from "../components/RecommendedProducts";
 import { useRecommendations, trackProduct } from "../hooks/useRecommendations";
+import { allProducts } from "../data/products";
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -15,28 +16,7 @@ export function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-  const product = {
-    id: id || "1",
-    name: "Software de Gestão ERP",
-    category: "Tecnologia",
-    price: 450000,
-    supplier: "TechSolutions Angola",
-    rating: 4.8,
-    reviews: 127,
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
-    description:
-      "Sistema ERP completo para gestão empresarial, incluindo módulos de contabilidade, RH, vendas, compras e inventário. Ideal para pequenas e médias empresas.",
-    features: [
-      "Módulo de Contabilidade Integrada",
-      "Gestão de Recursos Humanos",
-      "Controle de Vendas e CRM",
-      "Gestão de Inventário",
-      "Relatórios e Dashboard em Tempo Real",
-      "Suporte Técnico 24/7",
-      "Atualizações Gratuitas",
-      "Integração com Bancos",
-    ],
-  };
+  const product = allProducts.find((p) => p.id === id) ?? allProducts[0];
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
