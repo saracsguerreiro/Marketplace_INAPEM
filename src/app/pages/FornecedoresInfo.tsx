@@ -47,8 +47,7 @@ export function FornecedoresInfo() {
               Venda Mais com Pagamento Garantido
             </h1>
             <p className="text-sm md:text-base opacity-90 mb-6 leading-relaxed max-w-xl mx-auto">
-              Junte-se ao maior marketplace B2B de Angola. Ofereça financiamento aos seus
-              clientes e receba o pagamento directamente do INAPEM, sem risco de incumprimento.
+              Junte-se ao maior marketplace B2B de Angola. Venda os seus produtos e serviços de forma fácil e rápida.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -62,7 +61,7 @@ export function FornecedoresInfo() {
                 to="/marketplace"
                 className="bg-white/10 border-2 border-white/30 backdrop-blur-sm text-white px-6 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/20 transition-colors"
               >
-                Ver Marketplace
+                Ver Produtos e Serviços
               </Link>
             </div>
           </div>
