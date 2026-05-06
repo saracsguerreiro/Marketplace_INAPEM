@@ -1,5 +1,5 @@
-import { Link, useSearchParams } from "react-router";
-import { Search, ChevronLeft, ChevronRight, ShoppingCart, Plus, Minus } from "lucide-react";
+import { Link, useSearchParams, useNavigate } from "react-router";
+import { Search, ChevronLeft, ChevronRight, ShoppingCart, Plus, Minus, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
   TechnologyIcon,
@@ -19,6 +19,7 @@ import { trackProduct } from "../hooks/useRecommendations";
 
 export function Marketplace() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("Todos");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
@@ -81,6 +82,14 @@ export function Marketplace() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Voltar
+      </button>
+
       <div className="mb-8">
         <h1 className="mb-4">Produtos e Serviços</h1>
         <p className="text-muted-foreground">
