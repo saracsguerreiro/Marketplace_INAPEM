@@ -15,7 +15,7 @@ export function SupplierDashboard() {
     {
       icon: DollarSign,
       label: "Vendas Este Mês",
-      value: "€48.000",
+      value: "48.000 Kz",
       trend: "+12%",
       color: "text-green-600",
       bg: "bg-green-100",
@@ -52,7 +52,7 @@ export function SupplierDashboard() {
       date: "05 Mai 2026",
       client: "TechStart Lda",
       product: "Software ERP",
-      amount: 5999,
+      amount: 450000,
       payment: "Financiado 12x",
       status: "Confirmado",
     },
@@ -61,7 +61,7 @@ export function SupplierDashboard() {
       date: "04 Mai 2026",
       client: "Comércio Online SA",
       product: "Sistema CRM",
-      amount: 3499,
+      amount: 320000,
       payment: "Financiado 24x",
       status: "Processando",
     },
@@ -70,16 +70,16 @@ export function SupplierDashboard() {
       date: "02 Mai 2026",
       client: "Consultoria Pro",
       product: "Licenças Premium",
-      amount: 1200,
+      amount: 185000,
       payment: "À vista",
       status: "Entregue",
     },
   ];
 
   const topProducts = [
-    { name: "Software ERP", sales: 15, revenue: 89985 },
-    { name: "Sistema CRM", sales: 22, revenue: 76978 },
-    { name: "Consultoria", sales: 8, revenue: 96000 },
+    { name: "Software ERP", sales: 15, revenue: 6750000 },
+    { name: "Sistema CRM", sales: 22, revenue: 7040000 },
+    { name: "Consultoria", sales: 8, revenue: 2240000 },
   ];
 
   return (
@@ -164,7 +164,7 @@ export function SupplierDashboard() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-medium">€{product.revenue.toLocaleString()}</div>
+                  <div className="font-medium">{product.revenue.toLocaleString()} Kz</div>
                 </div>
               </div>
             ))}
@@ -197,7 +197,7 @@ export function SupplierDashboard() {
                   <td className="py-4 px-4 text-muted-foreground">{sale.date}</td>
                   <td className="py-4 px-4">{sale.client}</td>
                   <td className="py-4 px-4">{sale.product}</td>
-                  <td className="py-4 px-4">€{sale.amount.toLocaleString()}</td>
+                  <td className="py-4 px-4">{sale.amount.toLocaleString()} Kz</td>
                   <td className="py-4 px-4 text-sm text-muted-foreground">{sale.payment}</td>
                   <td className="py-4 px-4">
                     <span

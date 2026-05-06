@@ -15,7 +15,7 @@ export function CompanyDashboard() {
     {
       icon: CreditCard,
       label: "Crédito Disponível",
-      value: "€75.000",
+      value: "75.000 Kz",
       trend: "+15%",
       color: "text-blue-600",
       bg: "bg-blue-100",
@@ -23,7 +23,7 @@ export function CompanyDashboard() {
     {
       icon: ShoppingBag,
       label: "Compras Este Mês",
-      value: "€25.000",
+      value: "25.000 Kz",
       trend: "+8%",
       color: "text-green-600",
       bg: "bg-green-100",
@@ -31,7 +31,7 @@ export function CompanyDashboard() {
     {
       icon: TrendingUp,
       label: "Total Financiado",
-      value: "€150.000",
+      value: "150.000 Kz",
       trend: "+22%",
       color: "text-purple-600",
       bg: "bg-purple-100",
@@ -40,7 +40,7 @@ export function CompanyDashboard() {
       icon: Clock,
       label: "Próximo Vencimento",
       value: "15 Mai",
-      trend: "€5.200",
+      trend: "5.200 Kz",
       color: "text-orange-600",
       bg: "bg-orange-100",
     },
@@ -50,7 +50,7 @@ export function CompanyDashboard() {
     {
       id: "1",
       product: "Software ERP",
-      amount: 5999,
+      amount: 450000,
       installments: "6/12",
       nextPayment: "15 Mai 2026",
       status: "Em dia",
@@ -58,7 +58,7 @@ export function CompanyDashboard() {
     {
       id: "2",
       product: "Equipamento Escritório",
-      amount: 8500,
+      amount: 620000,
       installments: "3/24",
       nextPayment: "20 Mai 2026",
       status: "Em dia",
@@ -70,14 +70,14 @@ export function CompanyDashboard() {
       id: "1",
       date: "02 Mai 2026",
       product: "Consultoria Marketing",
-      amount: 3500,
+      amount: 280000,
       status: "Processando",
     },
     {
       id: "2",
       date: "28 Abr 2026",
       product: "Licenças Software",
-      amount: 1200,
+      amount: 185000,
       status: "Entregue",
     },
   ];
@@ -197,7 +197,7 @@ export function CompanyDashboard() {
                 <tr key={order.id} className="border-b border-border">
                   <td className="py-4 px-4 text-muted-foreground">{order.date}</td>
                   <td className="py-4 px-4">{order.product}</td>
-                  <td className="py-4 px-4">€{order.amount.toLocaleString()}</td>
+                  <td className="py-4 px-4">{order.amount.toLocaleString()} Kz</td>
                   <td className="py-4 px-4">
                     <span
                       className={`text-xs px-2 py-1 rounded ${
