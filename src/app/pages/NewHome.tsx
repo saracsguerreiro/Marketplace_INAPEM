@@ -57,7 +57,6 @@ export function NewHome() {
   };
 
   const categories = [
-    { name: "Todos", icon: StoreIcon, count: "1.200+" },
     { name: "Tecnologia", icon: TechnologyIcon, count: "340" },
     { name: "Equipamentos", icon: EquipmentIcon, count: "280" },
     { name: "Serviços", icon: ServicesIcon, count: "195" },
@@ -228,7 +227,7 @@ export function NewHome() {
             <p className="text-muted-foreground text-lg">Encontre exatamente o que a sua empresa precisa</p>
           </div>
 
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-9 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {categories.map((cat) => {
               const Icon = cat.icon;
               return (
