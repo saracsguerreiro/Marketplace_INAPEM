@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Bell, ShoppingBag, CreditCard, CheckCircle, X, FileText, Clock } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router";
 
 interface Notification {
   id: string;
@@ -115,6 +116,7 @@ const colorMap = {
 
 export function NotificationBell() {
   const { userType } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState(
     userType === "fornecedor" ? supplierNotifications : companyNotifications
@@ -224,7 +226,10 @@ export function NotificationBell() {
 
           {/* Footer */}
           <div className="px-5 py-3 border-t border-border text-center">
-            <button className="text-xs text-coral hover:underline">
+            <button
+              onClick={() => { setOpen(false); navigate("/notificacoes"); }}
+              className="text-xs text-coral hover:underline"
+            >
               Ver todas as notificações
             </button>
           </div>

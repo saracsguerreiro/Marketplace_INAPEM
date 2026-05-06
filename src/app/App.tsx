@@ -13,6 +13,7 @@ import { FornecedoresInfo } from "./pages/FornecedoresInfo";
 import { EmpresaRegisto } from "./pages/EmpresaRegisto";
 import { FornecedorRegisto } from "./pages/FornecedorRegisto";
 import { Cart } from "./pages/Cart";
+import { Notifications } from "./pages/Notifications";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="empresa/dashboard" element={<CompanyDashboard />} />
               <Route path="fornecedor/dashboard" element={<SupplierDashboard />} />
               <Route path="login" element={<Login />} />
+              <Route path="notificacoes" element={<Notifications />} />
             </Route>
           </Routes>
         </HashRouter>
