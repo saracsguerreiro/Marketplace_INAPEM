@@ -71,7 +71,7 @@ export function Layout() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-              {userType === "fornecedor" && <NotificationBell />}
+              {(userType === "fornecedor" || userType === "empresa") && <NotificationBell />}
 
               <Link to="/carrinho" className="p-2 rounded-lg hover:bg-primary-foreground/10 transition-colors relative">
                 <ShoppingCart className="w-5 h-5" />

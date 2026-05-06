@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, ShoppingBag, CreditCard, CheckCircle, X } from "lucide-react";
+import { Bell, ShoppingBag, CreditCard, CheckCircle, X, FileText, Clock } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 interface Notification {
   id: string;
-  type: "payment" | "order" | "info";
+  type: "payment" | "order" | "info" | "financing" | "deadline";
   title: string;
   message: string;
   time: string;
   read: boolean;
 }
 
-const mockNotifications: Notification[] = [
+const supplierNotifications: Notification[] = [
   {
     id: "1",
     type: "payment",
@@ -53,21 +54,71 @@ const mockNotifications: Notification[] = [
   },
 ];
 
+const companyNotifications: Notification[] = [
+  {
+    id: "1",
+    type: "financing",
+    title: "Financiamento em Análise",
+    message: "O seu pedido de financiamento de 850.000 Kz está em análise. Prazo de resposta: 2 dias úteis.",
+    time: "Há 2 horas",
+    read: false,
+  },
+  {
+    id: "2",
+    type: "deadline",
+    title: "Prestação a Vencer",
+    message: "A prestação nº 3 do seu financiamento (37.500 Kz) vence em 5 dias.",
+    time: "Há 4 horas",
+    read: false,
+  },
+  {
+    id: "3",
+    type: "order",
+    title: "Encomenda Confirmada",
+    message: "A sua encomenda de Sistema ERP Completo foi confirmada pelo fornecedor TechSolutions Angola.",
+    time: "Ontem",
+    read: true,
+  },
+  {
+    id: "4",
+    type: "financing",
+    title: "Financiamento Aprovado",
+    message: "O seu pedido de financiamento de 450.000 Kz foi aprovado. Valor disponível para compra.",
+    time: "Há 3 dias",
+    read: true,
+  },
+  {
+    id: "5",
+    type: "info",
+    title: "Documentos em Falta",
+    message: "Para concluir o seu pedido de financiamento, falta enviar a declaração fiscal actualizada.",
+    time: "Há 4 dias",
+    read: true,
+  },
+];
+
 const iconMap = {
   payment: CreditCard,
   order: ShoppingBag,
   info: CheckCircle,
+  financing: FileText,
+  deadline: Clock,
 };
 
 const colorMap = {
   payment: "text-orange-500 bg-orange-50",
   order: "text-coral bg-coral/10",
   info: "text-green-600 bg-green-50",
+  financing: "text-blue-600 bg-blue-50",
+  deadline: "text-red-500 bg-red-50",
 };
 
 export function NotificationBell() {
+  const { userType } = useAuth();
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState(
+    userType === "fornecedor" ? supplierNotifications : companyNotifications
+  );
   const ref = useRef<HTMLDivElement>(null);
 
   const unread = notifications.filter((n) => !n.read).length;
