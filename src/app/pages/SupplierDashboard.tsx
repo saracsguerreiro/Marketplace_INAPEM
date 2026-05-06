@@ -1,5 +1,6 @@
 import { Package, DollarSign, Users, TrendingUp } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { InsightsPanel } from "../components/InsightsPanel";
 
 const salesData = [
   { id: "jan", month: "Jan", sales: 32000 },
@@ -87,6 +88,32 @@ export function SupplierDashboard() {
         <h1 className="mb-2">Dashboard - Fornecedor</h1>
         <p className="text-muted-foreground">Gerencie seus produtos e vendas</p>
       </div>
+
+      <InsightsPanel insights={[
+        {
+          type: "up",
+          title: "Vendas em crescimento",
+          description: "As suas vendas aumentaram 20% esta semana face à semana anterior. Software ERP liderou com 8 novas encomendas.",
+        },
+        {
+          type: "tip",
+          title: "Produto mais rentável",
+          description: "Consultoria representa 38% da sua receita total com apenas 8 vendas. Considere aumentar o preço ou criar pacotes premium.",
+          action: "Ver produto",
+        },
+        {
+          type: "alert",
+          title: "Encomendas pendentes",
+          description: "Tem 2 encomendas sem resposta há mais de 24h. Responder rapidamente melhora a sua avaliação no marketplace.",
+          action: "Responder agora",
+        },
+        {
+          type: "tip",
+          title: "Oportunidade de cross-sell",
+          description: "Clientes que compram Sistema CRM também costumam adquirir Software ERP. Considere criar um pacote combinado.",
+          action: "Criar pacote",
+        },
+      ]} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => {

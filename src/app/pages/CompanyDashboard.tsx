@@ -1,5 +1,6 @@
 import { CreditCard, ShoppingBag, TrendingUp, Clock } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { InsightsPanel } from "../components/InsightsPanel";
 
 const spendingData = [
   { id: "jan", month: "Jan", value: 12000 },
@@ -87,6 +88,32 @@ export function CompanyDashboard() {
         <h1 className="mb-2">Dashboard - Empresa</h1>
         <p className="text-muted-foreground">Visão geral das suas finanças e compras</p>
       </div>
+
+      <InsightsPanel insights={[
+        {
+          type: "up",
+          title: "Tecnologia em alta",
+          description: "Gastou 32% mais em Tecnologia este mês face ao mês anterior. É a sua categoria com maior crescimento.",
+          action: "Ver produtos de Tecnologia",
+        },
+        {
+          type: "alert",
+          title: "Prestações a vencer",
+          description: "Tem 2 prestações a vencer nos próximos 10 dias — total de 10.400 Kz. Garanta saldo suficiente.",
+          action: "Ver financiamentos",
+        },
+        {
+          type: "tip",
+          title: "Oportunidade de poupança",
+          description: "Empresas com o seu perfil poupam em média 18% ao consolidar compras de Equipamentos num único pedido.",
+          action: "Explorar Equipamentos",
+        },
+        {
+          type: "up",
+          title: "Crédito bem utilizado",
+          description: "Utilizou 75% do crédito disponível de forma eficiente. O seu histórico de pagamentos está em excelente estado.",
+        },
+      ]} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => {
