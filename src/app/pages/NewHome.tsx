@@ -171,25 +171,25 @@ export function NewHome() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
 
-        <div className="max-w-7xl mx-auto pl-8 pr-4 sm:pl-12 lg:pl-16 py-12 relative z-10 mx-[44px] my-[0px]">
-          <div className="max-w-lg">
-            <h1 className="text-3xl md:text-4xl mb-6 leading-tight">
-              Impulsione<br />o seu negócio
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 w-full">
+          <div className="text-center">
+            <h1 className="text-2xl md:text-3xl mb-4 leading-tight">
+              Impulsione o seu negócio
             </h1>
-            <p className="text-base opacity-90 mb-6 leading-relaxed">
+            <p className="text-sm md:text-base opacity-90 mb-6 leading-relaxed max-w-xl mx-auto">
               Encontre produtos e serviços de fornecedores certificados. Peça financiamento e pague directamente ao fornecedor — sem intermediários.
             </p>
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={handlePedirFinanciamento}
-                className="bg-coral text-white px-8 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-xl shadow-coral/30 w-fit"
+                className="bg-coral text-white px-6 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-xl shadow-coral/30"
               >
                 Pedir Financiamento
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
               <Link
                 to="/marketplace"
-                className="bg-white/10 border-2 border-white/30 backdrop-blur-sm text-white px-8 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/20 transition-colors w-fit"
+                className="bg-white/10 border-2 border-white/30 backdrop-blur-sm text-white px-6 py-3 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/20 transition-colors"
               >
                 Ver Produtos
               </Link>
