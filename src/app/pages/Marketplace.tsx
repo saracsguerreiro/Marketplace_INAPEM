@@ -13,21 +13,9 @@ import {
 } from "../components/icons/CategoryIcons";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../contexts/CartContext";
+import { allProducts } from "../data/products";
+import { trackProduct } from "../hooks/useRecommendations";
 
-const mockProducts = [
-  { id: "1", type: "produto", name: "Sistema ERP Completo", category: "Tecnologia", price: 450000, supplier: "TechSolutions Angola", rating: 4.9, image: "https://images.unsplash.com/photo-1753715613457-63127ec40824?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBvZmZpY2UlMjBzb2Z0d2FyZSUyMHRlY2hub2xvZ3klMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzc3OTk0MzY3fDA&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "2", type: "produto", name: "Equipamento Industrial Premium", category: "Equipamentos", price: 850000, supplier: "Máquinas Premium", rating: 4.8, image: "https://images.unsplash.com/photo-1761519609252-3b868e540398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwZXF1aXBtZW50JTIwbWFjaGluZXJ5JTIwZmFjdG9yeXxlbnwxfHx8fDE3Nzc5OTQzNjd8MA&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "3", type: "serviço", name: "Consultoria Empresarial", category: "Serviços", price: 280000, supplier: "Consulting Pro", rating: 4.7, image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmclMjBtZWV0aW5nJTIwb2ZmaWNlfGVufDF8fHx8MTc3Nzk5NDM2OHww&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "4", type: "produto", name: "Materiais de Construção", category: "Construção", price: 620000, supplier: "Build Master", rating: 4.6, image: "https://images.unsplash.com/photo-1773649967822-d3f31c88a16e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBtYXRlcmlhbHMlMjBidWlsZGluZyUyMHN1cHBsaWVzfGVufDF8fHx8MTc3Nzk5NDM2OHww&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "5", type: "produto", name: "Computadores Dell Premium", category: "Tecnologia", price: 185000, supplier: "Tech Store Angola", rating: 4.8, image: "https://images.unsplash.com/photo-1554246247-6993b606e8b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxsJTIwY29tcHV0ZXIlMjBsYXB0b3AlMjB3b3Jrc3RhdGlvbnxlbnwxfHx8fDE3Nzc5OTQzNjh8MA&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "6", type: "serviço", name: "Frota de Transporte", category: "Logística", price: 950000, supplier: "TransAngola", rating: 4.9, image: "https://images.unsplash.com/photo-1776988038414-29a4a1869275?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxkZWxpdmVyeSUyMHRydWNrJTIwZmxlZXQlMjB0cmFuc3BvcnQlMjBsb2dpc3RpY3N8ZW58MXx8fHwxNzc3OTk0Mzc0fDA&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "7", type: "produto", name: "Equipamento Médico Hospitalar", category: "Saúde", price: 420000, supplier: "MedEquip Angola", rating: 4.7, image: "https://images.unsplash.com/photo-1710074213379-2a9c2653046a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtZWRpY2FsJTIwZXF1aXBtZW50JTIwaG9zcGl0YWwlMjBoZWFsdGhjYXJlfGVufDF8fHx8MTc3Nzk5NDM3NXww&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "8", type: "serviço", name: "Software CRM Cloud", category: "Tecnologia", price: 320000, supplier: "CloudSoft Angola", rating: 4.6, image: "https://images.unsplash.com/photo-1753715613457-63127ec40824?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBvZmZpY2UlMjBzb2Z0d2FyZSUyMHRlY2hub2xvZ3klMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzc3OTk0MzY3fDA&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "9", type: "produto", name: "Equipamento Agrícola", category: "Agronegócio", price: 680000, supplier: "AgroTech Angola", rating: 4.8, image: "https://images.unsplash.com/photo-1761519609252-3b868e540398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwZXF1aXBtZW50JTIwbWFjaGluZXJ5JTIwZmFjdG9yeXxlbnwxfHx8fDE3Nzc5OTQzNjd8MA&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "10", type: "produto", name: "Ferramentas Industriais", category: "Equipamentos", price: 245000, supplier: "Tools Master", rating: 4.5, image: "https://images.unsplash.com/photo-1761519609252-3b868e540398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwZXF1aXBtZW50JTIwbWFjaGluZXJ5JTIwZmFjdG9yeXxlbnwxfHx8fDE3Nzc5OTQzNjd8MA&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "11", type: "serviço", name: "Serviços de Marketing Digital", category: "Serviços", price: 180000, supplier: "Digital Boost Angola", rating: 4.9, image: "https://images.unsplash.com/photo-1551135049-8a33b5883817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnN1bHRpbmclMjBtZWV0aW5nJTIwb2ZmaWNlfGVufDF8fHx8MTc3Nzk5NDM2OHww&ixlib=rb-4.1.0&q=80&w=1080" },
-  { id: "12", type: "produto", name: "Material de Escritório Completo", category: "Outros", price: 95000, supplier: "Office Plus", rating: 4.4, image: "https://images.unsplash.com/photo-1554246247-6993b606e8b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWxsJTIwY29tcHV0ZXIlMjBsYXB0b3AlMjB3b3Jrc3RhdGlvbnxlbnwxfHx8fDE3Nzc5OTQzNjh8MA&ixlib=rb-4.1.0&q=80&w=1080" },
-];
 
 export function Marketplace() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -66,7 +54,7 @@ export function Marketplace() {
     { name: "Outros", icon: OthersIcon },
   ];
 
-  const filteredProducts = mockProducts.filter((product) => {
+  const filteredProducts = allProducts.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "Todos" || product.category === selectedCategory;
     const matchesType = selectedType === "Todos" || product.type === selectedType.toLowerCase();
@@ -165,7 +153,7 @@ export function Marketplace() {
             key={product.id}
             className="bg-white border-2 border-border rounded-2xl overflow-hidden hover:border-coral hover:shadow-xl transition-all group"
           >
-            <Link to={`/marketplace/${product.id}`}>
+            <Link to={`/marketplace/${product.id}`} onClick={() => trackProduct(product.id, product.category)}>
               <div className="aspect-[4/3] overflow-hidden bg-gray-100">
                 <ImageWithFallback
                   src={product.image}
