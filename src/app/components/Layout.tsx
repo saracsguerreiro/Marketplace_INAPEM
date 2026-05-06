@@ -4,6 +4,7 @@ import { useState } from "react";
 import inapemLogo from "../../imports/inapem_MARKETPLACE_w.png";
 import inapemLogoFooter from "../../imports/inapem-seeklogo-1.png";
 import { LoginModal } from "./LoginModal";
+import { FinancingAssistant } from "./FinancingAssistant";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
 
@@ -225,6 +226,7 @@ export function Layout() {
         onClose={() => setLoginModalOpen(false)}
         onLogin={login}
       />
+      <FinancingAssistant />
     </div>
   );
 }
