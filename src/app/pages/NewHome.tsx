@@ -257,7 +257,7 @@ export function NewHome() {
 
         {/* PRODUTOS EM DESTAQUE */}
         <section className="mb-16">
-     mx-[43px] my-[0px]      <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="mb-2">Produtos em <span className="text-coral">Destaque</span></h2>
               <p className="text-muted-foreground">Os mais procurados pelas empresas angolanas</p>
