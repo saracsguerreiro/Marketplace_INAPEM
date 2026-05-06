@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { Star, CheckCircle, ArrowLeft, Plus, Minus, ShoppingCart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCart } from "../contexts/CartContext";
@@ -100,13 +100,13 @@ export function ProductDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link
-        to="/marketplace"
-        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6"
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        Voltar aos Produtos e Serviços
-      </Link>
+        Voltar
+      </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Coluna esquerda: foto + descrição + características */}
