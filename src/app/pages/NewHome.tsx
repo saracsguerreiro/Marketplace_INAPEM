@@ -34,15 +34,11 @@ export function NewHome() {
   const handleWelcomeClose = (role: "pme" | "fornecedor" | "visitante" | "login" | "close") => {
     setShowWelcome(false);
     if (role === "pme") {
-      window.location.href = "/empresas";
+      navigate("/empresas");
     } else if (role === "fornecedor") {
-      window.location.href = "/fornecedores";
-    } else if (role === "visitante") {
-      window.location.href = "/marketplace";
-    } else if (role === "close") {
-      // Apenas fecha o popup, permanece na home
-      return;
+      navigate("/fornecedores");
     }
+    // "visitante", "close" e "login" ficam na home
   };
 
   const handlePedirFinanciamento = () => {
