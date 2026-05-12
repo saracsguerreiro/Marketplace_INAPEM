@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X, Building2, Store, Eye } from "lucide-react";
-import inapemLogo from "../../imports/inapem_MARKETPLACE_w.png";
+import inapemLogo from "../../imports/inapem-seeklogo-1.png";
 
 interface WelcomePopupProps {
   onClose: (role: "pme" | "fornecedor" | "visitante" | "login" | "close") => void;
@@ -42,8 +42,8 @@ export function WelcomePopup({ onClose }: WelcomePopupProps) {
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex justify-center mb-7 -mx-12 -mt-12 rounded-t-3xl overflow-hidden bg-primary px-12 py-6">
-          <img src={inapemLogo} alt="Marketplace INAPEM" className="h-12 object-contain" />
+        <div className="flex justify-center mb-7">
+          <img src={inapemLogo} alt="INAPEM" className="h-12 object-contain" />
         </div>
 
         <h2 className="text-center mb-2">Bem-vindo ao Marketplace INAPEM</h2>
