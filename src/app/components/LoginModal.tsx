@@ -37,7 +37,7 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
           <p className="text-muted-foreground">Entre na sua conta</p>
         </div>
 
-        <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl">
+        <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-full">
           {(["empresa", "fornecedor", "gestor"] as const).map((tab) => (
             <button
               key={tab}
@@ -64,14 +64,14 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+              className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
               required
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block mb-2 text-sm">
-              Senha
+              Palavra-Passe
             </label>
             <input
               id="password"
@@ -79,7 +79,7 @@ export function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+              className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
               required
             />
           </div>
