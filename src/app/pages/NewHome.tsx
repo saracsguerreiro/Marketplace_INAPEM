@@ -218,7 +218,7 @@ export function NewHome() {
                 name="q"
                 type="text"
                 placeholder="Ex: gerir pessoal, transportar mercadoria, equipamento médico..."
-                className="w-full pl-16 pr-6 py-5 text-base border-2 border-border rounded-2xl focus:outline-none focus:border-coral transition-colors shadow-lg"
+                className="w-full pl-16 pr-6 py-5 text-base border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors shadow-lg"
               />
               <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-coral text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity">
                 Pesquisar
@@ -336,7 +336,7 @@ export function NewHome() {
               </p>
               <button
                 onClick={() => setLoginModalOpen(true)}
-                className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-xl"
+                className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-full hover:opacity-90 transition-opacity shadow-xl"
               >
                 Solicitar
                 <ArrowRight className="w-4 h-4" />
@@ -360,7 +360,7 @@ export function NewHome() {
               </p>
               <button
                 onClick={() => setLoginModalOpen(true)}
-                className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-xl"
+                className="inline-flex items-center gap-2 bg-coral text-white px-6 py-3 rounded-full hover:opacity-90 transition-opacity shadow-xl"
               >
                 Registar Empresa
                 <ArrowRight className="w-4 h-4" />
