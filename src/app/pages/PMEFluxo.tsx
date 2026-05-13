@@ -388,7 +388,7 @@ function Step3({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
         </div>
         <div>
           <label className="block text-xs mb-1.5">Finalidade do Crédito <span className="text-coral">*</span></label>
-          <textarea placeholder="Descreva para que vai utilizar este financiamento..." rows={3} className="w-full px-4 py-3 border-2 border-border rounded-full text-sm outline-none focus:border-coral transition-colors resize-none" />
+          <textarea placeholder="Descreva para que vai utilizar este financiamento..." rows={3} className="w-full px-4 py-3 border-2 border-border rounded-xl text-sm outline-none focus:border-coral transition-colors resize-none" />
         </div>
       </div>
 
