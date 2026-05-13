@@ -106,7 +106,7 @@ export function Marketplace() {
 
       {/* Tabs Produto / Serviço */}
       <div className="mb-8">
-        <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
+        <div className="flex gap-1 bg-gray-100 p-1 rounded-full w-fit">
           {["Todos", "Produto", "Serviço"].map((tab) => (
             <button
               key={tab}
