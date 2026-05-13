@@ -22,19 +22,19 @@ export function Login() {
               id="email"
               type="email"
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+              className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block mb-2">
-              Senha
+              Palavra-Passe
             </label>
             <input
               id="password"
               type="password"
               placeholder="••••••••"
-              className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+              className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
             />
           </div>
 
