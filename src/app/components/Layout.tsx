@@ -97,7 +97,7 @@ export function Layout() {
               <div className="flex items-center gap-1 bg-primary-foreground/10 rounded-full p-1">
                 <button
                   onClick={() => setLanguage("PT")}
-                  className={`px-3 py-1 rounded text-sm transition-colors ${
+                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
                     language === "PT"
                       ? "bg-coral text-white"
                       : "hover:bg-primary-foreground/10"
@@ -107,7 +107,7 @@ export function Layout() {
                 </button>
                 <button
                   onClick={() => setLanguage("EN")}
-                  className={`px-3 py-1 rounded text-sm transition-colors ${
+                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
                     language === "EN"
                       ? "bg-coral text-white"
                       : "hover:bg-primary-foreground/10"
