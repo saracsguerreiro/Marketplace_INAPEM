@@ -31,10 +31,10 @@ export function FornecedorRegisto() {
           </p>
         </div>
 
-        <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-xl">
+        <div className="flex gap-2 mb-8 bg-gray-100 p-1 rounded-full">
           <button
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-3 px-4 rounded-lg transition-all ${
+            className={`flex-1 py-3 px-4 rounded-full transition-all ${
               !isLogin
                 ? "bg-white shadow text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -44,7 +44,7 @@ export function FornecedorRegisto() {
           </button>
           <button
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-3 px-4 rounded-lg transition-all ${
+            className={`flex-1 py-3 px-4 rounded-full transition-all ${
               isLogin
                 ? "bg-white shadow text-foreground"
                 : "text-muted-foreground hover:text-foreground"
@@ -66,7 +66,7 @@ export function FornecedorRegisto() {
                     id="company-name"
                     type="text"
                     placeholder="Nome da sua empresa"
-                    className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+                    className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
                     required
                   />
                 </div>
@@ -78,7 +78,7 @@ export function FornecedorRegisto() {
                     id="nif"
                     type="text"
                     placeholder="Número de identificação fiscal"
-                    className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+                    className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
                     required
                   />
                 </div>
@@ -90,7 +90,7 @@ export function FornecedorRegisto() {
                 </label>
                 <select
                   id="category"
-                  className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+                  className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
                   required
                 >
                   <option value="">Selecione uma categoria</option>
@@ -113,7 +113,7 @@ export function FornecedorRegisto() {
                   id="contact-name"
                   type="text"
                   placeholder="Nome completo"
-                  className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+                  className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
                   required
                 />
               </div>
@@ -128,20 +128,20 @@ export function FornecedorRegisto() {
               id="email"
               type="email"
               placeholder="fornecedor@email.com"
-              className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+              className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
               required
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block mb-2 text-sm">
-              Senha
+              Palavra-Passe
             </label>
             <input
               id="password"
               type="password"
               placeholder="••••••••"
-              className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+              className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
               required
             />
           </div>
@@ -155,7 +155,7 @@ export function FornecedorRegisto() {
                 id="confirm-password"
                 type="password"
                 placeholder="••••••••"
-                className="w-full px-4 py-3 border-2 border-border rounded-xl focus:outline-none focus:border-coral transition-colors"
+                className="w-full px-4 py-3 border-2 border-border rounded-full focus:outline-none focus:border-coral transition-colors"
                 required
               />
             </div>
