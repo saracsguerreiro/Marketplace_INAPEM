@@ -764,7 +764,7 @@ export function SupplierDashboard() {
                     onClick={handleGenerateAI}
                     disabled={aiGenerating || !form.name.trim() || !form.description.trim()}
                     title={!form.name.trim() || !form.description.trim() ? "Preencha o nome e descrição primeiro" : "Gerar imagem com IA"}
-                    className="flex-1 flex items-center justify-center gap-2 bg-indigo-50 text-indigo-600 text-xs font-medium py-2.5 rounded-xl hover:bg-indigo-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="flex-1 flex items-center justify-center gap-2 bg-indigo-50 text-indigo-600 text-xs font-medium py-2.5 rounded-full hover:bg-indigo-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {aiGenerating
                       ? <><RefreshCw className="w-3.5 h-3.5 animate-spin" /> A gerar...</>
@@ -789,14 +789,14 @@ export function SupplierDashboard() {
             <div className="flex gap-3 p-6 border-t border-gray-100">
               <button
                 onClick={() => { setShowModal(false); setForm(emptyForm); setAiGenerating(false); }}
-                className="flex-1 border border-gray-200 text-gray-600 text-sm py-2.5 rounded-xl hover:bg-gray-50 transition-colors"
+                className="flex-1 border border-gray-200 text-gray-600 text-sm py-2.5 rounded-full hover:bg-gray-50 transition-colors"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleAdd}
                 disabled={!form.name.trim() || !form.price}
-                className={`flex-1 text-white text-sm py-2.5 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`flex-1 text-white text-sm py-2.5 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   form.type === "serviço" ? "bg-violet-500 hover:bg-violet-600" : "bg-indigo-500 hover:bg-indigo-600"
                 }`}
               >
@@ -821,7 +821,7 @@ export function SupplierDashboard() {
             <div className="flex gap-3">
               <button
                 onClick={() => setConfirmDelete(null)}
-                className="flex-1 border border-gray-200 text-gray-600 text-sm py-2.5 rounded-xl hover:bg-gray-50 transition-colors"
+                className="flex-1 border border-gray-200 text-gray-600 text-sm py-2.5 rounded-full hover:bg-gray-50 transition-colors"
               >
                 Cancelar
               </button>
